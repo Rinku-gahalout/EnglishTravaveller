@@ -1,10 +1,3 @@
-{{-- @php
-    use Illuminate\Support\Facades\DB;
-
-    $trashCount = DB::table('blogs')->whereNotNull('deleted_at')->count();
-    $draftCount = DB::table('blogs')->where('is_draft', 1)->whereNull('deleted_at')->count();
-@endphp --}}
-
 @php
     use Illuminate\Support\Facades\DB;
 
@@ -26,326 +19,208 @@
     $trashCount = DB::table('blogs')
         ->whereNotNull('deleted_at')
         ->count();
+
+    $isAdmin = auth('admin')->user()?->role === 'admin';
 @endphp
 
+<nav class="side" id="nav-bar" aria-label="Main navigation">
 
+    <a href="{{ route('admin.dashboard') }}" class="side__brand">
+        <span class="side__brand-mark"><i class='bx bxs-plane-alt'></i></span>
+        <span class="side__brand-text">
+            <span class="side__brand-name">EnglishTraveller</span>
+            <span class="side__brand-sub">Admin panel</span>
+        </span>
+    </a>
 
-<nav class="l-navbar show" id="nav-bar">
-    <nav class="nav">
-        <div>
-            <a href="{{ route('admin.dashboard') }}" class="nav_logo">
-                <i class='bx bx-layer nav_logo-icon'></i>
-                <span class="nav_logo-name">Admin Panel</span>
+    {{-- The menu is drawn as a flight route: each page is a stop on the dashed line --}}
+    <div class="side__scroll">
+
+        <a href="{{ route('admin.dashboard') }}"
+           class="nav_link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+            <span class="nav_stop"><i class='bx bx-home-alt'></i></span>
+            <span class="nav_name">Home</span>
+        </a>
+
+        <a href="{{ route('admin.blogs.index') }}"
+           class="nav_link {{ request()->routeIs('admin.blogs.index') ? 'active' : '' }}">
+            <span class="nav_stop"><i class='bx bx-news'></i></span>
+            <span class="nav_name">Blog</span>
+            @if($blogCount > 0)
+                <span class="nav_count">{{ $blogCount }}</span>
+            @endif
+        </a>
+
+        <a href="{{ route('admin.categories.listCategory') }}"
+           class="nav_link {{ request()->routeIs('admin.categories.listCategory') ? 'active' : '' }}">
+            <span class="nav_stop"><i class='bx bx-category'></i></span>
+            <span class="nav_name">Category</span>
+        </a>
+
+        <a href="{{ route('admin.subcategories.list') }}"
+           class="nav_link {{ request()->routeIs('admin.subcategories.*') ? 'active' : '' }}">
+            <span class="nav_stop"><i class='bx bx-purchase-tag-alt'></i></span>
+            <span class="nav_name">Subcategory</span>
+        </a>
+
+        <a href="{{ route('admin.blogs.drafts') }}"
+           class="nav_link {{ request()->routeIs('admin.blogs.drafts') ? 'active' : '' }}">
+            <span class="nav_stop"><i class='bx bx-edit-alt'></i></span>
+            <span class="nav_name">Draft</span>
+            @if($draftCount > 0)
+                <span class="nav_count">{{ $draftCount }}</span>
+            @endif
+        </a>
+
+        @if($isAdmin)
+            <div class="side__group">Administration</div>
+
+            <a href="{{ route('admin.blogs.trash') }}"
+               class="nav_link {{ request()->routeIs('admin.blogs.trash') ? 'active' : '' }}">
+                <span class="nav_stop"><i class='bx bx-trash'></i></span>
+                <span class="nav_name">Trash</span>
+                @if($trashCount > 0)
+                    <span class="nav_count nav_count--alert">{{ $trashCount }}</span>
+                @endif
             </a>
-            <div class="nav_list">
-                <a href="{{ route('admin.dashboard') }}"
-                    class="nav_link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                    <i class='bx bx-grid-alt nav_icon'></i>
-                    <span class="nav_name">Home</span>
-                </a>
-                
-                
-<a href="{{ route('admin.blogs.index') }}"
-    class="nav_link {{ request()->routeIs('admin.blogs.index') ? 'active' : '' }}">
 
-    <i class='bx bx-plus-circle nav_icon'></i>
+            <a href="{{ route('admin.users.index') }}"
+               class="nav_link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                <span class="nav_stop"><i class='bx bx-user'></i></span>
+                <span class="nav_name">Users</span>
+            </a>
 
-    <span class="nav_name">Blog</span>
-
-    @if($blogCount > 0)
-        <span class="badge">{{ $blogCount }}</span>
-    @endif
-
-</a>
-
-
-
-                <a href="{{ route('admin.categories.listCategory') }}"
-                    class="nav_link {{ request()->routeIs('admin.categories.listCategory') ? 'active' : '' }}">
-                    <i class='bx bx-category nav_icon'></i>
-                    <span class="nav_name">Category</span>
-                </a>
-
-                <a href="{{ route('admin.subcategories.list') }}"
-                    class="nav_link {{ request()->routeIs('admin.subcategories.*') ? 'active' : '' }}">
-                    <i class='bx bx-purchase-tag-alt nav_icon'></i>
-                    <span class="nav_name">Subcategory</span>
-                </a>
-
-              <a href="{{ route('admin.blogs.drafts') }}"
-    class="nav_link {{ request()->routeIs('admin.blogs.drafts') ? 'active' : '' }}">
-
-    <i class='bx bx-pencil nav_icon'></i>
-
-    <span class="nav_name">Draft</span>
-
-    @if($draftCount > 0)
-        <span class="badge">{{ $draftCount }}</span>
-    @endif
-
-</a>
-
-
-             @if(auth('admin')->user()?->role === 'admin')
-
-    <a href="{{ route('admin.blogs.trash') }}"
-        class="nav_link {{ request()->routeIs('admin.blogs.trash') ? 'active' : '' }}">
-
-        <i class='bx bx-trash nav_icon'></i>
-
-        <span class="nav_name">Trash</span>
-
-        @if($trashCount > 0)
-            <span class="badge">{{ $trashCount }}</span>
+            <a href="{{ route('admin.blogs.old') }}"
+               class="nav_link {{ request()->routeIs('admin.blogs.old') ? 'active' : '' }}">
+                <span class="nav_stop"><i class='bx bx-archive'></i></span>
+                <span class="nav_name">Old blogs</span>
+            </a>
         @endif
 
-    </a>
+    </div>
 
-@endif
+    <div class="side__foot">
+        <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" class="m-0">
+            @csrf
+            @method('delete')
+            <button type="submit" class="side__logout">
+                <i class='bx bx-log-out'></i> Log out
+            </button>
+        </form>
+    </div>
 
-                @if(auth('admin')->user()?->role === 'admin')
-                    <a href="{{ route('admin.users.index') }}"
-                        class="nav_link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                        <i class='bx bx-user nav_icon'></i>
-                        <span class="nav_name">Users</span>
-                    </a>
-                @endif
-                
-                @if(auth('admin')->user()?->role === 'admin')
-     <a href="{{ route('admin.blogs.old') }}"
-        class="nav_link {{ request()->routeIs('admin.blogs.old') ? 'active' : '' }}">
-        <i class='bx bx-folder nav_icon'></i>
-        <span class="nav_name">Old Blogs</span>
-    </a>
-@endif
-
-
-            </div>
-        </div>
-        <div class="nav_bottom">
-            <form id="logout-form" action="{{ route('admin.logout') }}" method="POST">
-                @csrf
-                @method('delete')
-                <button type="submit" class="btn btn-danger w-100">Logout</button>
-            </form>
-        </div>
-    </nav>
 </nav>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
 <style>
-    @import url("https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap");
-
-    :root {
-        --navy-deep: #0b1d26;
-        --navy-mid: #142f3d;
-        --navy-soft: #1d3f50;
-        --brass: #c9a26a;
-        --brass-bright: #e7c68c;
-        --paper: #f6f1e4;
-        --ink: #16232b;
-        --ink-soft: #5b6b74;
-
-        --header-height: 3rem;
-        --nav-width: 250px;
-        --white-color: #f7f6fb;
-        --body-font: 'Inter', sans-serif;
-        --display-font: 'Big Shoulders Display', sans-serif;
-        --mono-font: 'Space Mono', monospace;
-        --normal-font-size: 1rem;
-        --z-fixed: 100;
-    }
-
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    body {
-        font-family: var(--body-font);
-        font-size: var(--normal-font-size);
-        background-color: var(--paper);
-    }
-
-    /* ===========================================================
-       SIDEBAR
-    ============================================================ */
-    .l-navbar {
+    .side {
+        --stop: 36px;                         /* diameter of each stop on the route */
+        --pad: 1rem;                          /* left padding of the route */
         position: relative;
-        width: 100%;
-        height: 100vh;
-        background: linear-gradient(180deg, var(--navy-mid), var(--navy-deep) 85%);
-        background-image:
-            linear-gradient(180deg, var(--navy-mid), var(--navy-deep) 85%),
-            radial-gradient(1px 1px at 20% 15%, rgba(255, 255, 255, .18) 50%, transparent 51%),
-            radial-gradient(1px 1px at 70% 40%, rgba(255, 255, 255, .14) 50%, transparent 51%),
-            radial-gradient(1px 1px at 40% 70%, rgba(255, 255, 255, .12) 50%, transparent 51%);
-        padding: 1rem 0.5rem;
-        display: flex;
-        flex-direction: column;
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.35);
-        transition: left .3s ease;
-    }
-
-    .nav {
-        display: flex;
-        flex-direction: column;
         height: 100%;
-    }
-
-    /* ---------- Logo ---------- */
-    .nav_logo {
-        display: flex;
-        align-items: center;
-        color: var(--paper);
-        font-family: var(--display-font);
-        font-weight: 800;
-        letter-spacing: .02em;
-        text-transform: uppercase;
-        font-size: 1.3rem;
-        padding: 1rem;
-        border-bottom: 1px dashed rgba(246, 241, 228, .18);
-        margin-bottom: .5rem;
-        transition: transform .3s ease;
-    }
-
-    .nav_logo:hover {
-        transform: translateX(3px);
-    }
-
-    .nav_logo-icon {
-        font-size: 1.8rem;
-        margin-right: 0.6rem;
-        color: var(--brass-bright);
-        transition: transform .4s ease;
-    }
-
-    .nav_logo:hover .nav_logo-icon {
-        transform: rotate(-12deg) scale(1.1);
-    }
-
-    /* ---------- Links ---------- */
-    .nav_list {
-        display: flex;
-        flex-direction: column;
-        gap: .2rem;
-        margin-top: .5rem;
-    }
-
-    .nav_link {
-        display: flex;
-        align-items: center;
-        color: rgba(246, 241, 228, .75);
-        padding: 0.75rem 1rem;
-        border-radius: 0.5rem;
-        font-weight: 500;
-        font-size: .95rem;
-        position: relative;
+        display: flex; flex-direction: column;
+        color: #fff;
         overflow: hidden;
-        transition: color .25s ease, background .25s ease, transform .25s ease;
+        background:
+            radial-gradient(1.2px 1.2px at 18% 12%, rgba(255, 255, 255, .55) 50%, transparent 51%),
+            radial-gradient(1px 1px at 72% 24%, rgba(255, 255, 255, .4) 50%, transparent 51%),
+            radial-gradient(1px 1px at 38% 58%, rgba(255, 255, 255, .35) 50%, transparent 51%),
+            radial-gradient(1.2px 1.2px at 84% 74%, rgba(255, 255, 255, .45) 50%, transparent 51%),
+            radial-gradient(120% 60% at 100% 100%, rgba(156, 96, 55, .35), transparent 60%),
+            linear-gradient(180deg, var(--navy-mid), var(--navy-deep) 55%, #1f281e);
+        box-shadow: 4px 0 22px rgba(0, 0, 0, .3);
     }
 
-    .nav_link::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 3px;
-        height: 0%;
-        background: var(--brass-bright);
-        border-radius: 0 3px 3px 0;
-        transition: height .25s ease;
+    /* ---------- Brand ---------- */
+    .side__brand {
+        display: flex; align-items: center; gap: .75rem;
+        padding: 1.1rem var(--pad) 1.1rem var(--pad);
+        border-bottom: 1px dashed rgba(181, 201, 173, .3);
+        text-decoration: none; color: #fff;
+    }
+    .side__brand-mark {
+        width: 44px; height: 44px; flex-shrink: 0; display: grid; place-items: center;
+        border-radius: 50%; font-size: 1.6rem; color: #fff;
+        background: linear-gradient(135deg, var(--sunset), #c98a5c);
+        box-shadow: 0 0 0 4px rgba(156, 96, 55, .22);
+    }
+    .side__brand-mark i { transform: rotate(45deg); transition: transform .5s ease; }
+    .side__brand:hover .side__brand-mark i { transform: rotate(90deg); }
+    .side__brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .side__brand-name { font-family: var(--display-font); font-weight: 700; font-size: 1.25rem; }
+    .side__brand-sub { font-size: .78rem; color: rgba(255, 255, 255, .6); margin-top: .2rem; }
+
+    /* ---------- Route ---------- */
+    .side__scroll {
+        position: relative;
+        flex: 1; overflow-y: auto; overflow-x: hidden;
+        padding: 1.1rem .7rem 1rem var(--pad);
+        display: flex; flex-direction: column; gap: .35rem;
+        scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, .2) transparent;
+    }
+    /* the dashed flight path that every stop sits on */
+    .side__scroll::before {
+        content: ""; position: absolute;
+        left: calc(var(--pad) + var(--stop) / 2 - 1px);
+        top: 1.6rem; bottom: 1rem;
+        border-left: 2px dashed rgba(181, 201, 173, .4);
     }
 
-    .nav_link:hover {
-        background: rgba(201, 162, 106, .12);
-        color: var(--paper);
-        transform: translateX(4px);
+    .side__group {
+        position: relative;
+        margin: .9rem 0 .2rem calc(var(--stop) + .8rem);
+        font-size: .78rem; font-weight: 600; color: var(--sky-bright);
     }
 
-    .nav_link:hover::before {
-        height: 60%;
+    .side .nav_link {
+        position: relative;
+        display: flex; align-items: center; gap: .8rem;
+        padding: .2rem .8rem .2rem 0;
+        border-radius: 999px;
+        color: rgba(255, 255, 255, .78);
+        font-weight: 500; font-size: .95rem; text-decoration: none;
+        transition: background .2s ease, color .2s ease;
+    }
+    .side .nav_link:hover { color: #fff; background: rgba(181, 201, 173, .1); }
+    .side .nav_link:focus-visible { outline: 2px solid var(--sky-bright); outline-offset: 2px; }
+
+    .side .nav_stop {
+        width: var(--stop); height: var(--stop); flex-shrink: 0;
+        display: grid; place-items: center; border-radius: 50%;
+        font-size: 1.2rem; color: var(--sky-bright);
+        background: var(--navy-mid);
+        border: 2px solid rgba(181, 201, 173, .45);
+        transition: background .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
+    }
+    .side .nav_link:hover .nav_stop { border-color: var(--sky-bright); color: #fff; }
+
+    /* active stop = where the plane currently is */
+    .side .nav_link.active { color: #fff; font-weight: 600; background: rgba(156, 96, 55, .14); }
+    .side .nav_link.active .nav_stop {
+        background: var(--sunset); border-color: var(--sunset-bright); color: #fff;
+        box-shadow: 0 0 0 5px rgba(156, 96, 55, .22);
     }
 
-    .nav_link.active {
-        background: rgba(201, 162, 106, .16);
-        color: var(--brass-bright);
-        box-shadow: inset 0 0 0 1px rgba(201, 162, 106, .25);
-    }
-
-    .nav_link.active::before {
-        height: 70%;
-    }
-
-    .nav_icon {
-        margin-right: 1rem;
-        font-size: 1.25rem;
-        transition: transform 0.3s ease;
-    }
-
-    .nav_link:hover .nav_icon,
-    .nav_link.active .nav_icon {
-        transform: scale(1.15);
-    }
-
-    .nav_name {
-        font-size: .95rem;
-    }
-
-    .badge {
+    .nav_count {
         margin-left: auto;
-        background: var(--brass-bright);
-        padding: 0.2rem 0.55rem;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-family: var(--mono-font);
-        color: var(--navy-deep);
-        font-weight: 700;
+        min-width: 26px; padding: .15rem .5rem; text-align: center;
+        border-radius: 999px; background: var(--sky); color: #fff;
+        font-family: var(--mono-font); font-size: .72rem; font-weight: 700;
     }
+    .nav_count--alert { background: var(--red); }
 
-    /* ---------- Bottom / Logout ---------- */
-    .nav_bottom {
-        margin-top: auto;
-        padding: 1rem;
-        border-top: 1px dashed rgba(246, 241, 228, .18);
+    /* ---------- Footer ---------- */
+    .side__foot { padding: 1rem var(--pad); border-top: 1px dashed rgba(181, 201, 173, .3); }
+    .side__logout {
+        width: 100%; display: flex; align-items: center; justify-content: center; gap: .5rem;
+        padding: .65rem; border: 1px solid rgba(255, 138, 128, .5); border-radius: .6rem;
+        background: transparent; color: #ffb0a8; font-weight: 600;
+        transition: background .2s ease, color .2s ease, border-color .2s ease;
     }
+    .side__logout i { font-size: 1.2rem; }
+    .side__logout:hover { background: var(--red); border-color: var(--red); color: #fff; }
+    .side__logout:focus-visible { outline: 2px solid var(--sky-bright); outline-offset: 2px; }
 
-    .nav_bottom .btn-danger {
-        background: #c1443b;
-        border-color: #c1443b;
-        border-radius: 0.5rem;
-        padding: 0.6rem;
-        font-weight: 600;
-        letter-spacing: .01em;
-        transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
-    }
-
-    .nav_bottom .btn-danger:hover {
-        background: #a83a32;
-        border-color: #a83a32;
-        transform: translateY(-1px);
-        box-shadow: 0 8px 18px rgba(193, 68, 59, .35);
-    }
-
-    .nav_bottom .btn-danger:active {
-        transform: translateY(0) scale(.98);
-    }
-
-    /* ===========================================================
-       RESPONSIVE
-    ============================================================ */
-    @media (max-width: 768px) {
-        .l-navbar {
-            left: -260px;
-        }
-
-        .l-navbar.show {
-            left: 0;
-        }
+    @media (prefers-reduced-motion: reduce) {
+        .side *, .side *::after { transition: none !important; }
     }
 </style>

@@ -1,199 +1,173 @@
+@php
+    $adminUser = auth('admin')->user();
+    $roleLabel = $adminUser?->role === 'admin' ? 'Admin' : ($adminUser?->role === 'user' ? 'User' : '');
+@endphp
+
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap");
+    .topbar {
+        position: fixed; top: 0; left: var(--sidebar-width); right: 0; z-index: 1030;
+        height: var(--header-height); padding: 0 1.75rem;
+        display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+        background: rgba(255, 255, 255, .92);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+        box-shadow: 0 4px 16px rgba(45, 56, 43, .06);
+    }
+    /* dashed flight-path line along the bottom edge */
+    .topbar::after {
+        content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+        background: repeating-linear-gradient(90deg, var(--sky) 0 8px, transparent 8px 16px);
+        opacity: .55; pointer-events: none;
+    }
 
-:root {
-    --navy-deep: #0b1d26;
-    --navy-mid: #142f3d;
-    --navy-soft: #1d3f50;
-    --brass: #c9a26a;
-    --brass-bright: #e7c68c;
-    --paper: #f6f1e4;
-    --ink: #16232b;
-    --ink-soft: #5b6b74;
-    --body-font: 'Inter', sans-serif;
-    --display-font: 'Big Shoulders Display', sans-serif;
-    --mono-font: 'Space Mono', monospace;
-}
+    .topbar__left { display: flex; align-items: center; gap: .9rem; min-width: 0; }
 
-body {
-    font-family: var(--body-font);
-}
+    .topbar__toggle {
+        width: 42px; height: 42px; border: 1px solid var(--line); border-radius: .6rem;
+        background: transparent; color: var(--navy-deep); font-size: 1.5rem;
+        display: grid; place-items: center;
+    }
+    .topbar__toggle:hover { background: var(--sky-soft); }
 
-/* Navbar */
-.navbar {
-    height: 70px;
-    padding: 0 2rem;
-    background: linear-gradient(90deg, var(--navy-mid), var(--navy-deep) 85%);
-    background-image:
-        linear-gradient(90deg, var(--navy-mid), var(--navy-deep) 85%),
-        radial-gradient(1px 1px at 15% 30%, rgba(255, 255, 255, .16) 50%, transparent 51%),
-        radial-gradient(1px 1px at 60% 60%, rgba(255, 255, 255, .12) 50%, transparent 51%),
-        radial-gradient(1px 1px at 85% 20%, rgba(255, 255, 255, .1) 50%, transparent 51%);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, .3);
-    border-bottom: 1px dashed rgba(246, 241, 228, .18);
-}
+    .topbar__crumbs { min-width: 0; line-height: 1.15; }
+    .topbar__app { font-size: .8rem; color: var(--ink-soft); font-weight: 500; }
+    .topbar__page {
+        font-family: var(--display-font); font-weight: 700; font-size: 1.45rem; color: var(--navy-deep);
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
 
-/* Navbar brand */
-.navbar-brand {
-    font-family: var(--display-font);
-    font-weight: 800;
-    letter-spacing: .02em;
-    text-transform: uppercase;
-    font-size: 1.4rem;
-    color: var(--paper) !important;
-}
+    .topbar__right { display: flex; align-items: center; gap: .8rem; }
 
-/* Profile button */
-.profile-btn img {
-    width: 46px;
-    height: 46px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 2px solid var(--brass);
-    transition: all .3s ease;
-}
+    .site-link {
+        display: inline-flex; align-items: center; gap: .4rem;
+        padding: .45rem .9rem; border-radius: 999px; font-size: .85rem; font-weight: 600;
+        color: var(--navy-soft); background: var(--sky-soft); text-decoration: none;
+        transition: background .2s ease, color .2s ease;
+    }
+    .site-link:hover { background: var(--sky); color: #fff; }
 
-.profile-btn img:hover {
-    transform: scale(1.08);
-    box-shadow: 0 0 12px rgba(201, 162, 106, .6);
-    border-color: var(--brass-bright);
-}
+    .role-chip {
+        display: inline-flex; align-items: center; gap: .35rem;
+        padding: .3rem .75rem; border-radius: 999px; font-size: .8rem; font-weight: 700;
+        background: var(--navy-deep); color: var(--sky-bright);
+    }
 
-/* Dropdown menu */
-.dropdown-menu {
-    min-width: 250px;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid rgba(22, 35, 43, .1);
-    box-shadow: 0 10px 28px rgba(11, 29, 38, .22);
-    padding: 0;
-    animation: fadeIn .25s ease;
-    background: #fffdf8;
-}
+    /* Profile */
+    .profile-btn { padding: 0; border: 0; background: transparent; }
+    .profile-btn::after { display: none; }
+    .profile-btn img {
+        width: 44px; height: 44px; object-fit: cover; border-radius: 50%;
+        border: 2px solid var(--sunset); padding: 2px; background: #ffffff;
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .profile-btn:hover img, .profile-btn:focus-visible img {
+        transform: scale(1.06); box-shadow: 0 0 0 4px rgba(156, 96, 55, .25);
+    }
+    .profile-btn:focus-visible { outline: none; }
 
-/* Fade-in animation for dropdown */
-@keyframes fadeIn {
-    from {opacity: 0; transform: translateY(-8px);}
-    to {opacity: 1; transform: translateY(0);}
-}
+    .profile-menu {
+        min-width: 270px; padding: 0; margin-top: .75rem !important;
+        border: 1px solid var(--line); border-radius: .9rem; overflow: hidden;
+        background: #ffffff; box-shadow: 0 14px 34px rgba(45, 56, 43, .22);
+    }
+    .profile-menu__head {
+        display: flex; align-items: center; gap: .85rem; padding: 1rem 1.15rem;
+        background: linear-gradient(120deg, var(--navy-deep), var(--navy-soft));
+        color: #fff;
+    }
+    .profile-menu__head img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid var(--sunset); }
+    .profile-menu__name { font-family: var(--display-font); font-weight: 700; font-size: 1.1rem; color: #fff; line-height: 1.1; }
+    .profile-menu__email { font-size: .8rem; color: rgba(255, 255, 255, .75); word-break: break-all; }
 
-/* Admin info */
-.dropdown-menu .admin-info {
-    background-color: var(--navy-deep);
-    padding: 16px 20px;
-    font-size: .92rem;
-    color: var(--paper);
-    text-align: left;
-    border-bottom: 1px dashed rgba(246, 241, 228, .2);
-}
+    .profile-menu .dropdown-item {
+        display: flex; align-items: center; gap: .75rem; width: 100%;
+        padding: .75rem 1.15rem; font-size: .92rem; font-weight: 500; color: var(--ink);
+    }
+    .profile-menu .dropdown-item i { font-size: 1.2rem; color: var(--navy-soft); }
+    .profile-menu .dropdown-item:hover { background: var(--sky-soft); color: var(--navy-deep); }
+    .profile-menu .dropdown-item.is-danger, .profile-menu .dropdown-item.is-danger i { color: var(--red); }
+    .profile-menu .dropdown-item.is-danger:hover { background: var(--red); color: #fff; }
+    .profile-menu .dropdown-item.is-danger:hover i { color: #fff; }
+    .profile-menu .dropdown-divider { margin: 0; border-color: var(--line); }
 
-.dropdown-menu .admin-info b {
-    color: var(--brass-bright);
-    font-family: var(--display-font);
-    letter-spacing: .01em;
-}
+    @media (max-width: 991.98px) {
+        .topbar { left: 0; }
+    }
 
-/* Dropdown items */
-.dropdown-menu .dropdown-item {
-    padding: 12px 20px;
-    transition: all .2s ease;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: .92rem;
-    font-weight: 500;
-    color: var(--ink);
-}
-
-.dropdown-menu .dropdown-item i {
-    font-size: 1.05rem;
-    color: var(--navy-soft);
-    width: 18px;
-    text-align: center;
-}
-
-/* Hover effect */
-.dropdown-menu .dropdown-item:hover {
-    background: var(--brass);
-    color: var(--navy-deep);
-    border-radius: 8px;
-}
-
-.dropdown-menu .dropdown-item:hover i {
-    color: var(--navy-deep);
-}
-
-/* Divider spacing */
-.dropdown-divider {
-    margin: 0;
-    border-color: rgba(22, 35, 43, .1);
-}
-
-/* Logout button */
-.dropdown-menu .text-danger {
-    color: #c1443b !important;
-}
-
-.dropdown-menu .text-danger i {
-    color: #c1443b !important;
-}
-
-.dropdown-menu .text-danger:hover {
-    background-color: #c1443b !important;
-    color: #fff !important;
-    border-radius: 8px;
-}
-
-.dropdown-menu .text-danger:hover i {
-    color: #fff !important;
-}
-
+    @media (max-width: 575.98px) {
+        .topbar { padding: 0 1rem; }
+        .topbar__page { font-size: 1.15rem; }
+        .role-chip, .site-link span { display: none; }
+        .site-link { padding: .5rem; }
+    }
 </style>
 
-<!-- Icons (optional, for dropdown icons) -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<header class="topbar">
 
-<nav class="navbar d-flex justify-content-between align-items-center">
-    <span class="navbar-brand">
-    @if(auth('admin')->check() && auth('admin')->user()->role === 'admin')
-        Admin EnglishTraveller Dashboard
-    @elseif(auth('admin')->check() && auth('admin')->user()->role === 'user')
-        User EnglishTraveller Dashboard
-    @else
-        EnglishTraveller Dashboard
-    @endif
-    </span>
-
-    <!-- Profile dropdown -->
-    <div class="dropdown">
-        <button class="btn p-0 border-0 bg-transparent dropdown-toggle profile-btn" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="{{ auth('admin')->user()->profile_image ?? asset('images/avatar5.png') }}" alt="Profile">
+    <div class="topbar__left">
+        <button type="button" class="topbar__toggle d-lg-none" id="sidebarToggle" aria-label="Open menu">
+            <i class='bx bx-menu'></i>
         </button>
 
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-            <!-- Admin info -->
-            <li class="admin-info">
-                <b>{{ auth('admin')->user()->name ?? '' }}</b><br>
-                {{ auth('admin')->user()->email ?? '' }}
-            </li>
-
-            <!-- Actions -->
-            <li><a class="dropdown-item" href="#"><i class="fa-solid fa-key"></i> Change Password</a></li>
-            {{-- <li><a class="dropdown-item" href="{{ route('forgot.password.form') }}"><i class="fa-solid fa-lock-open"></i> Forgot Password</a></li> --}}
-            @if(auth('admin')->user()?->role === 'admin')
-                <li><a class="dropdown-item" href="{{ route('admin.users.index') }}"><i class="fa-solid fa-user-plus"></i> Add User</a></li>
-                <li><hr class="dropdown-divider"></li>
-            @endif
-
-            <!-- Logout -->
-            <li>
-                <form action="{{ route('admin.logout') }}" method="POST">
-                    @csrf
-                    @method('delete')
-                    <button class="dropdown-item text-danger w-100 border-0 bg-transparent" type="submit"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
-                </form>
-            </li>
-        </ul>
+        <div class="topbar__crumbs">
+            <div class="topbar__app">EnglishTraveller</div>
+            <div class="topbar__page">@yield('title', 'Dashboard')</div>
+        </div>
     </div>
-</nav>
 
+    <div class="topbar__right">
+
+        <a href="{{ url('/') }}" target="_blank" rel="noopener" class="site-link" title="Open the live website">
+            <i class='bx bx-link-external'></i> <span>View site</span>
+        </a>
+
+        @if($roleLabel)
+            <span class="role-chip"><i class='bx bx-shield-quarter'></i> {{ $roleLabel }}</span>
+        @endif
+
+        <!-- Profile dropdown -->
+        <div class="dropdown">
+            <button class="profile-btn dropdown-toggle" type="button" id="profileDropdown"
+                    data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open profile menu">
+                <img src="{{ $adminUser->profile_image ?? asset('images/avatar5.png') }}" alt="Profile">
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end profile-menu" aria-labelledby="profileDropdown">
+                <li class="profile-menu__head">
+                    <img src="{{ $adminUser->profile_image ?? asset('images/avatar5.png') }}" alt="">
+                    <div>
+                        <div class="profile-menu__name">{{ $adminUser->name ?? '' }}</div>
+                        <div class="profile-menu__email">{{ $adminUser->email ?? '' }}</div>
+                    </div>
+                </li>
+
+                <li>
+                    <a class="dropdown-item" href="#"><i class='bx bx-key'></i> Change password</a>
+                </li>
+
+                {{-- <li><a class="dropdown-item" href="{{ route('forgot.password.form') }}"><i class='bx bx-lock-open'></i> Forgot password</a></li> --}}
+
+                @if($adminUser?->role === 'admin')
+                    <li>
+                        <a class="dropdown-item" href="{{ route('admin.users.index') }}">
+                            <i class='bx bx-user-plus'></i> Add user
+                        </a>
+                    </li>
+                @endif
+
+                <li><hr class="dropdown-divider"></li>
+
+                <li>
+                    <form action="{{ route('admin.logout') }}" method="POST" class="m-0">
+                        @csrf
+                        @method('delete')
+                        <button class="dropdown-item is-danger border-0 bg-transparent" type="submit">
+                            <i class='bx bx-log-out'></i> Log out
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</header>
