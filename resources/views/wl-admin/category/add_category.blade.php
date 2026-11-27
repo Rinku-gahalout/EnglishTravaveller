@@ -1,476 +1,265 @@
 @extends('wl-admin.layouts.app')
 
-@section('content')
+@section('title', 'Add category')
 
-<div class="container-fluid py-4 ledger-dash">
+@section('content')
+<div class="container-fluid py-4 flight">
 
     @include('wl-admin.layouts.sessionmessage')
 
-    <!-- Page Header -->
-    <div class="page-header mb-4 p-4 rounded-4 shadow-sm bg-white border ledger-header">
-
-        <div>
-            <h2 class="mb-1">Add Category</h2>
-
-            <p class="mb-0 text-secondary">
-                Create a new category for your blog content.
-            </p>
+    <header class="page-head mb-4">
+        <div class="page-head__main">
+            <span class="page-head__icon"><i class='bx bx-folder-plus'></i></span>
+            <div>
+                <h1>Add category</h1>
+                <p>Create a new category for your blog content.</p>
+            </div>
         </div>
-
-        <div class="d-flex gap-2 flex-wrap">
-
-            <a href="{{ route('admin.categories.listCategory') }}"
-               class="btn btn-outline-ledger">
-                Category List
-            </a>
-
-            <a href="{{ route('admin.dashboard') }}"
-               class="btn btn-outline-ledger">
-                Back to Dashboard
-            </a>
-
+        <div class="page-head__actions">
+            <a href="{{ route('admin.categories.listCategory') }}" class="btn btn-outline-sky"><i class='bx bx-list-ul'></i> Category list</a>
+            <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-sky"><i class='bx bx-home-alt'></i> Dashboard</a>
         </div>
+    </header>
 
-    </div>
+    <form method="POST" action="{{ route('admin.category.store') }}" novalidate>
+        @csrf
 
+        {{-- ===================== BASIC INFO ===================== --}}
+        <section class="panel mb-4">
+            <div class="form-section">
+                <span class="form-section__icon"><i class='bx bx-info-circle'></i></span>
+                <h2>Basic info</h2>
+            </div>
 
-    <!-- Category Form -->
-    <div class="card ledger-card mb-4">
-
-        <div class="card-body">
-
-            <form method="POST"
-                  action="{{ route('admin.category.store') }}">
-
-                @csrf
-
-
-                <!-- Category Name -->
-                <div class="mb-3">
-
-                    <label for="name"
-                           class="form-label ledger-label">
-                        Category Name
-                    </label>
-
-                    <input type="text"
-                           id="name"
-                           name="name"
-                           value="{{ old('name') }}"
-                           class="form-control ledger-input @error('name') is-invalid @enderror">
-
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="name" class="field-label">Category name</label>
+                    <input type="text" id="name" name="name" value="{{ old('name') }}"
+                           class="form-control form-field @error('name') is-invalid @enderror">
                     @error('name')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-
                 </div>
 
-
-                <!-- Slug -->
-                <div class="mb-3">
-
-                    <label for="slug"
-                           class="form-label ledger-label">
-                        Slug (optional)
-                    </label>
-
-                    <input type="text"
-                           id="slug"
-                           name="slug"
-                           value="{{ old('slug') }}"
-                           class="form-control ledger-input @error('slug') is-invalid @enderror">
-
-                    <div class="form-text text-secondary">
-                        If left empty, the slug will be auto-generated from the name.
-                    </div>
-
+                <div class="col-md-6">
+                    <label for="slug" class="field-label">Slug (optional)</label>
+                    <input type="text" id="slug" name="slug" value="{{ old('slug') }}"
+                           class="form-control form-field @error('slug') is-invalid @enderror">
                     @error('slug')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-
+                    <div class="form-hint">If left empty, the slug will be auto-generated from the name.</div>
                 </div>
-                
-                <!-- ================= TITLE ================= --> 
-                <div class="mb-3">
-                    
-                    <label for="title"
-                    class="form-label ledger-label">
-                         Title 
-                    </label>
-                    
-                    <input type="text"
-                          id="title" 
-                          name="meta_title" 
-                          value="{{ old('title') }}" 
-                          maxlength="255" 
-                          class="form-control ledger-input @error('title') is-invalid @enderror" 
-                          placeholder="Enter category title...">
-                          
-                  @error('title')
-                        <div class="invalid-feedback"> 
-                        {{ $message }} 
-                        </div>
-                @enderror
+            </div>
+        </section>
+
+        {{-- ===================== SEO ===================== --}}
+        <section class="panel mb-4">
+            <div class="form-section">
+                <span class="form-section__icon"><i class='bx bx-search-alt'></i></span>
+                <h2>SEO and meta</h2>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="meta_title" class="field-label">Meta title</label>
+                    <input type="text" id="meta_title" name="meta_title" value="{{ old('meta_title') }}"
+                           maxlength="255" placeholder="Enter SEO meta title..."
+                           class="form-control form-field @error('meta_title') is-invalid @enderror">
+                    @error('meta_title')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
-                
-                  <div class="row g-3 mt-1">
-                        <div class="col-md-12">
-                            <label class="form-label ledger-label">Meta Keywords</label>
-                            <input type="text" name="meta_keywords" value="{{ old('meta_keywords') }}" class="form-control ledger-input @error('meta_keywords') is-invalid @enderror">
-                            @error('meta_keywords')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                
-                 <!-- ================= META DESCRIPTION ================= -->
-                <div class="mb-3">
 
-                    <label for="meta_description"
-                           class="form-label ledger-label">
-                        Meta Description
+                <div class="col-md-6">
+                    <label for="meta_keywords" class="field-label">Meta keywords</label>
+                    <input type="text" id="meta_keywords" name="meta_keywords" value="{{ old('meta_keywords') }}"
+                           class="form-control form-field @error('meta_keywords') is-invalid @enderror">
+                    @error('meta_keywords')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="row g-3 mt-1">
+                <div class="col-12">
+                    <label for="meta_description" class="field-label d-flex justify-content-between">
+                        <span>Meta description</span>
+                        <span id="meta-description-count" class="counter">0 / 160</span>
                     </label>
-
-                    <textarea id="meta_description"
-                              name="meta_description"
-                              rows="3"
-                              maxlength="160"
-                              class="form-control ledger-input @error('meta_description') is-invalid @enderror"
-                              placeholder="Enter a short description for search engines...">{{ old('meta_description') }}</textarea>
-
-                    <div class="d-flex justify-content-between mt-1">
-
-                        <div class="form-text text-secondary">
-                            Recommended length: 150–160 characters.
-                        </div>
-
-                        <div class="form-text">
-                            <span id="meta-description-count">0</span>/160
-                        </div>
-
-                    </div>
-
+                    <textarea id="meta_description" name="meta_description" rows="3" maxlength="160"
+                              placeholder="Write a short description for search engines..."
+                              class="form-control form-field @error('meta_description') is-invalid @enderror">{{ old('meta_description') }}</textarea>
                     @error('meta_description')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-
+                    <div class="form-hint">Recommended length: 150–160 characters.</div>
                 </div>
+            </div>
+        </section>
 
+        {{-- ===================== CONTENT ===================== --}}
+        <section class="panel mb-4">
+            <div class="form-section">
+                <span class="form-section__icon"><i class='bx bx-edit-alt'></i></span>
+                <h2>Content</h2>
+            </div>
 
-                <!-- Content -->
-                <div class="mb-3">
+            <textarea id="description" name="description" rows="4"
+                      class="form-control form-field @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+            @error('description')
+                <div class="invalid-feedback d-block">{{ $message }}</div>
+            @enderror
+        </section>
 
-                    <label for="description"
-                           class="form-label ledger-label">
-                        Content
-                    </label>
-
-                    <textarea id="description"
-                              name="description"
-                              rows="4"
-                              class="form-control ledger-input @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
-
-                    @error('description')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-
-                </div>
-
-
-                <!-- Status -->
-                <div class="mb-3">
-
-                    <label for="status"
-                           class="form-label ledger-label">
-                        Status
-                    </label>
-
-                    <select id="status"
-                            name="status"
-                            class="form-select ledger-input @error('status') is-invalid @enderror">
-
-                        <option value="active"
-                            {{ old('status') == 'active' ? 'selected' : '' }}>
-                            Active
-                        </option>
-
-                        <option value="inactive"
-                            {{ old('status') == 'inactive' ? 'selected' : '' }}>
-                            Inactive
-                        </option>
-
+        {{-- ===================== STATUS + SAVE ===================== --}}
+        <section class="panel">
+            <div class="form-actions">
+                <div class="form-actions__status">
+                    <label for="status" class="field-label mb-0">Status</label>
+                    <select id="status" name="status" class="form-select form-field @error('status') is-invalid @enderror">
+                        <option value="active" {{ old('status', 'active') === 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ old('status', 'active') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                     </select>
-
-                    @error('status')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-
                 </div>
 
+                <div class="d-flex gap-2">
+                    <a href="{{ route('admin.categories.listCategory') }}" class="btn btn-outline-sky">Cancel</a>
+                    <button type="submit" class="btn btn-sunset px-4"><i class='bx bx-save'></i> Save category</button>
+                </div>
+            </div>
+            @error('status')
+                <div class="text-danger small mt-2">{{ $message }}</div>
+            @enderror
+        </section>
 
-                <!-- Submit -->
-                <button type="submit"
-                        class="btn btn-brass">
-                    Save Category
-                </button>
-
-            </form>
-
-        </div>
-
-    </div>
+    </form>
 
 </div>
-
 @endsection
 
 
 @section('styles')
-
-<link rel="preconnect"
-      href="https://fonts.googleapis.com">
-
-<link rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin>
-
 <style>
-
-    @import url("https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap");
-
-
-    :root {
-
-        --navy-deep: #0b1d26;
-        --navy-mid: #142f3d;
-        --navy-soft: #1d3f50;
-
-        --brass: #c9a26a;
-        --brass-bright: #e7c68c;
-
-        --paper: #f6f1e4;
-        --ink: #16232b;
-        --ink-soft: #5b6b74;
-
-        --body-font: 'Inter', sans-serif;
-        --display-font: 'Big Shoulders Display', sans-serif;
-        --mono-font: 'Space Mono', monospace;
-    }
-
-
-    body {
-
-        font-family: var(--body-font);
-        background-color: var(--paper);
-        color: var(--ink);
-
-    }
-
-
-    .ledger-header h2,
-    .ledger-header h5 {
-
-        font-family: var(--display-font);
-
-    }
-
-
-    .ledger-card {
-
-        border: 1px solid rgba(22, 35, 43, .08);
-        border-radius: .75rem;
-        background: #fffdf8;
-        box-shadow: 0 4px 14px rgba(11, 29, 38, .06);
-
-    }
-
-
-    .ledger-label {
-
-        font-family: var(--display-font);
-        font-weight: 700;
-        letter-spacing: .02em;
-        text-transform: uppercase;
-        font-size: .85rem;
-        color: var(--navy-soft);
-
-    }
-
-
-    .ledger-input {
-
-        border: 1px solid rgba(22, 35, 43, .18);
-        border-radius: .75rem;
-        background: var(--paper);
-        color: var(--ink);
-
-    }
-
-
-    .ledger-input:focus {
-
-        border-color: var(--brass);
-        box-shadow: 0 0 0 .2rem rgba(201, 162, 106, .2);
-
-    }
-
-
-    .btn-brass {
-
-        background: var(--brass);
-        border: 1px solid var(--brass);
-        color: var(--navy-deep);
-
-        font-weight: 700;
-        letter-spacing: .01em;
-        border-radius: .5rem;
-
-    }
-
-
-    .btn-brass:hover {
-
-        background: var(--brass-bright);
-        border-color: var(--brass-bright);
-        color: var(--navy-deep);
-
-        transform: translateY(-1px);
-
-        box-shadow: 0 8px 18px rgba(201, 162, 106, .35);
-
-    }
-
-
-    .btn-outline-ledger {
-
-        background: transparent;
-        border: 1px solid var(--navy-soft);
-        color: var(--navy-soft);
-
-        font-weight: 600;
-        border-radius: .5rem;
-
-    }
-
-
-    .btn-outline-ledger:hover {
-
-        background: var(--navy-soft);
-        color: var(--paper);
-
-    }
-
-
-    .form-text {
-
-        color: var(--ink-soft);
-
-    }
-
-
-    /* Summernote */
-
-    .note-editor.note-frame {
-
-        border: 1px solid rgba(22, 35, 43, .18) !important;
-        border-radius: .75rem !important;
-        overflow: hidden;
-
-    }
-
-
-    .note-editor .note-toolbar {
-
-        background: #f6f1e4;
-        border-bottom: 1px solid rgba(22, 35, 43, .12);
-
-    }
-
-
-    .note-editor .note-editable {
-
-        background: #ffffff;
-        min-height: 300px;
-
-    }
-
-
-    .note-editor .note-statusbar {
-
-        background: #f6f1e4;
-
-    }
-
+.flight { color: var(--ink); }
+/* Buttons */
+        .flight .btn { border-radius: .6rem; font-weight: 600; padding: .55rem 1.1rem; display: inline-flex; align-items: center; justify-content: center; gap: .4rem; }
+        .flight .btn i { font-size: 1.15rem; }
+        .flight .btn-sm { padding: .35rem .8rem; font-size: .85rem; }
+        .flight .btn-sunset { background: var(--sunset); border: 1px solid var(--sunset); color: #fff; }
+        .flight .btn-sunset:hover { background: var(--sunset-bright); border-color: var(--sunset-bright); color: var(--navy-deep); box-shadow: 0 8px 18px rgba(156, 96, 55, .3); }
+        .flight .btn-outline-sky { background: transparent; border: 1px solid var(--navy-soft); color: var(--navy-soft); }
+        .flight .btn-outline-sky:hover { background: var(--navy-soft); color: #fff; }
+        .flight .btn-remove { background: transparent; border: 1px solid rgba(214, 69, 69, .5); color: var(--red); }
+        .flight .btn-remove:hover { background: var(--red); border-color: var(--red); color: #fff; }
+        .flight .btn:focus-visible, .flight .icon-btn:focus-visible, .flight .route-link:focus-visible { outline: 3px solid var(--sky-bright); outline-offset: 2px; }
+
+        /* Page header (inner pages) */
+        .page-head {
+            position: relative; overflow: hidden;
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+            padding: 1.25rem 1.5rem 1.25rem 1.75rem; background: #fff;
+            border: 1px solid var(--line); border-radius: .9rem;
+            box-shadow: 0 6px 18px rgba(45, 56, 43, .07);
+        }
+        .page-head::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--sunset); }
+        .page-head__main { display: flex; align-items: center; gap: 1rem; min-width: 0; }
+        .page-head__icon {
+            width: 52px; height: 52px; flex-shrink: 0; display: grid; place-items: center; border-radius: 50%;
+            font-size: 1.6rem; color: var(--sunset-bright); background: var(--navy-deep);
+            box-shadow: 0 0 0 4px rgba(156, 96, 55, .18);
+        }
+        .page-head h1 { font-family: var(--display-font); font-weight: 700; font-size: 1.6rem; margin: 0; color: var(--navy-deep); }
+        .page-head p { margin: .15rem 0 0; color: var(--ink-soft); font-size: .92rem; }
+        .page-head__actions { display: flex; gap: .6rem; flex-wrap: wrap; }
+
+        /* Panels */
+        .panel { position: relative; background: #fff; border: 1px solid var(--line); border-radius: .9rem; padding: 1.25rem 1.4rem; box-shadow: 0 6px 18px rgba(45, 56, 43, .07); }
+        .panel--flush { padding: 0; overflow: hidden; }
+        .panel__footer {
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+            padding: .9rem 1.25rem; border-top: 1px dashed rgba(45, 56, 43, .18); color: var(--ink-soft); font-size: .85rem; background: #fff;
+        }
+
+        /* Forms */
+        .form-section { display: flex; align-items: center; gap: .7rem; margin: 0 0 1.1rem; }
+        .form-section__icon { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; font-size: 1.15rem; color: var(--navy-soft); background: var(--sky-soft); }
+        .form-section h2 { font-family: var(--display-font); font-size: 1.2rem; font-weight: 700; margin: 0; color: var(--navy-deep); }
+        .form-section__hint { margin-left: auto; font-size: .82rem; color: var(--ink-soft); }
+
+        .field-label { font-weight: 700; font-size: .85rem; color: var(--navy-soft); margin-bottom: .35rem; }
+        .flight .form-field { min-height: 44px; border: 1px solid rgba(45, 56, 43, .22); border-radius: .6rem; background-color: #fff; }
+        .flight textarea.form-field { min-height: 0; }
+        .flight input[type="file"].form-field { padding: .55rem .75rem; }
+        .flight .form-field:focus { border-color: var(--sunset); box-shadow: 0 0 0 .22rem rgba(156, 96, 55, .2); }
+        .flight .form-field.is-invalid { border-color: var(--red); background-image: none; }
+        .form-hint { font-size: .8rem; color: var(--ink-soft); margin-top: .3rem; }
+        .form-hint strong { font-family: var(--mono-font); font-size: .78rem; color: var(--navy-soft); }
+
+        .counter { font-weight: 600; font-size: .78rem; color: var(--ink-soft); font-family: var(--mono-font); }
+        .counter--warning { color: #b0701f; }
+        .counter--danger { color: var(--red); }
+        .invalid-feedback-live { display: block; font-size: .8rem; color: var(--red); margin-top: .25rem; min-height: 1.1rem; }
+
+
+        .form-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+        .form-actions__status { display: flex; align-items: center; gap: .75rem; }
+        .form-actions__status .form-field { width: 190px; }
+
+        
+        @media (max-width: 768px) {
+            .form-actions__status .form-field { width: 100%; }
+        }
 </style>
-
 @endsection
 
 
 @section('scripts')
-
 <script>
+document.addEventListener('DOMContentLoaded', function () {
 
-$(document).ready(function () {
+    /* ---------- Content editor (jQuery + Summernote are loaded by the layout) ---------- */
+    try {
+        if (window.jQuery && window.jQuery.fn.summernote) {
+            window.jQuery('#description').summernote({
+                placeholder: 'Write category content here...',
+                tabsize: 2,
+                height: 300,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontname', ['fontname']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+        } else {
+            console.error('jQuery or Summernote is not loaded.');
+        }
+    } catch (err) {
+        console.error('Summernote failed to mount:', err);
+    }
 
-    $('#description').summernote({
+    /* ---------- Meta description counter (limit 160) ---------- */
+    const area    = document.getElementById('meta_description');
+    const counter = document.getElementById('meta-description-count');
 
-        placeholder: 'Write category content here...',
+    if (area && counter) {
+        const LIMIT = 160;
 
-        tabsize: 2,
+        function updateCount() {
+            const n = area.value.length;
+            counter.textContent = n + ' / ' + LIMIT;
+            counter.classList.toggle('counter--warning', n >= 150 && n < LIMIT);
+            counter.classList.toggle('counter--danger', n >= LIMIT);
+        }
 
-        height: 300,
-
-        toolbar: [
-
-            ['style', ['style']],
-
-            ['font', [
-                'bold',
-                'italic',
-                'underline',
-                'clear'
-            ]],
-
-            ['fontname', ['fontname']],
-
-            ['color', ['color']],
-
-            ['para', [
-                'ul',
-                'ol',
-                'paragraph'
-            ]],
-
-            ['table', ['table']],
-
-            ['insert', [
-                'link',
-                'picture',
-                'video'
-            ]],
-
-            ['view', [
-                'fullscreen',
-                'codeview',
-                'help'
-            ]]
-
-        ]
-
-    });
-
+        area.addEventListener('input', updateCount);
+        updateCount();
+    }
 });
-
 </script>
-
 @endsection
