@@ -59,30 +59,88 @@
                         </div>
                     </div>
 
-                    <div class="row g-3 mt-1">
-                        <div class="col-md-6">
-                            <label class="form-label ledger-label">Blog Heading</label>
-                            <input type="text" name="blog_heading" value="{{ old('blog_heading', $blog->blog_heading) }}" class="form-control ledger-input @error('blog_heading') is-invalid @enderror">
-                            @error('blog_heading')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label ledger-label">Image</label>
-                            <input type="file" id="image" name="image" accept="image/*"
-                                class="form-control ledger-input @error('image') is-invalid @enderror">
-                            @error('image')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <div class="mt-3">
-                                <img id="image-preview"
-                                     src="{{ $blog->image ? asset($blog->image) : '#' }}"
-                                     alt="Preview"
-                                     style="{{ $blog->image ? '' : 'display:none;' }}max-width:250px;border-radius:10px;border:1px solid #ddd;padding:5px;">
-                            </div>
-                        </div>
-                    </div>
+<div class="row g-3 mt-1">
+    <div class="col-md-6">
+        <label class="form-label ledger-label">Blog Heading</label>
+        <input
+            type="text"
+            name="blog_heading"
+            value="{{ old('blog_heading', $blog->blog_heading) }}"
+            class="form-control ledger-input @error('blog_heading') is-invalid @enderror"
+        >
 
+        @error('blog_heading')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label ledger-label">Blog URL</label>
+        <input
+            type="text"
+            name="blog_url"
+            value="{{ old('blog_url', $blog->blog_url) }}"
+            class="form-control ledger-input @error('blog_url') is-invalid @enderror"
+            placeholder="e.g. how-to-learn-laravel"
+        >
+
+        @error('blog_url')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+
+        <small class="text-secondary">
+            Use a URL-friendly slug, for example:
+            <strong>how-to-learn-laravel</strong>
+        </small>
+    </div>
+</div>
+
+<div class="row g-3 mt-1">
+
+    <!-- Image -->
+    <div class="col-md-6">
+        <label class="form-label ledger-label">Image</label>
+
+        <input 
+            type="file" 
+            id="image" 
+            name="image" 
+            accept="image/*" 
+            class="form-control ledger-input @error('image') is-invalid @enderror"
+        >
+
+        @error('image') 
+            <div class="invalid-feedback">{{ $message }}</div> 
+        @enderror
+
+        <div class="mt-3">
+            <img 
+                id="image-preview" 
+                src="{{ $blog->image ? asset($blog->image) : '#' }}" 
+                alt="Preview"
+                style="{{ $blog->image ? '' : 'display:none;' }}max-width:250px;border-radius:10px;border:1px solid #ddd;padding:5px;"
+            >
+        </div>
+    </div>
+
+    <!-- Meta Keywords -->
+    <div class="col-md-6">
+        <label class="form-label ledger-label">Meta Keywords</label>
+
+        <input 
+            type="text" 
+            name="meta_keywords" 
+            value="{{ old('meta_keywords', $blog->meta_keywords) }}" 
+            class="form-control ledger-input @error('meta_keywords') is-invalid @enderror"
+            placeholder="Enter meta keywords"
+        >
+
+        @error('meta_keywords') 
+            <div class="invalid-feedback">{{ $message }}</div> 
+        @enderror
+    </div>
+
+</div>
                     <hr class="ledger-divider">
 
                     <h6 class="ledger-section-title">SEO / Meta</h6>
@@ -100,13 +158,13 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label ledger-label">Alt Tag</label>
-                            <input type="text" name="alt_tag" value="{{ old('alt_tag', $blog->alt_tag) }}" class="form-control ledger-input @error('alt_tag') is-invalid @enderror">
-                            @error('alt_tag')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                        <!--<div class="col-md-6">-->
+                        <!--    <label class="form-label ledger-label">Alt Tag</label>-->
+                        <!--    <input type="text" name="alt_tag" value="{{ old('alt_tag', $blog->alt_tag) }}" class="form-control ledger-input @error('alt_tag') is-invalid @enderror">-->
+                        <!--    @error('alt_tag')-->
+                        <!--        <div class="invalid-feedback">{{ $message }}</div>-->
+                        <!--    @enderror-->
+                        <!--</div>-->
                     </div>
 
                     <div class="row g-3 mt-1">
@@ -119,15 +177,15 @@
                         </div>
                     </div>
 
-                    <div class="row g-3 mt-1">
-                        <div class="col-md-12">
-                            <label class="form-label ledger-label">Meta Keywords</label>
-                            <input type="text" name="meta_keywords" value="{{ old('meta_keywords', $blog->meta_keywords) }}" class="form-control ledger-input @error('meta_keywords') is-invalid @enderror">
-                            @error('meta_keywords')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
+                    <!--<div class="row g-3 mt-1">-->
+                    <!--    <div class="col-md-12">-->
+                    <!--        <label class="form-label ledger-label">Meta Keywords</label>-->
+                    <!--        <input type="text" name="meta_keywords" value="{{ old('meta_keywords', $blog->meta_keywords) }}" class="form-control ledger-input @error('meta_keywords') is-invalid @enderror">-->
+                    <!--        @error('meta_keywords')-->
+                    <!--            <div class="invalid-feedback">{{ $message }}</div>-->
+                    <!--        @enderror-->
+                    <!--    </div>-->
+                    <!--</div>-->
 
                     <hr class="ledger-divider">
 
@@ -154,60 +212,62 @@
 
                     <hr class="ledger-divider">
 
-                    <div class="mt-2">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="ledger-section-title mb-0">Blog FAQs</h6>
-                            <button type="button" id="add-faq" class="btn btn-sm btn-brass">+ Add FAQ</button>
-                        </div>
+                 <div class="mt-2">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="ledger-section-title mb-0">Blog FAQs</h6>
+        <button type="button" id="add-faq" class="btn btn-sm btn-brass">+ Add FAQ</button>
+    </div>
 
-                        <div id="faq-items">
-                            @php
-                                $faqs = old('faqs', $blog->faqs->toArray());
-                            @endphp
-                            @if(!empty($faqs))
-                                @foreach($faqs as $index => $faq)
-                                    <div class="faq-item mb-3 p-3 rounded-3 bg-white border">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="faq-badge">FAQ #{{ $index + 1 }}</span>
-                                            <button type="button" class="btn btn-sm btn-outline-danger remove-faq">Remove</button>
-                                        </div>
-                                        <input type="hidden" name="faqs[{{ $index }}][id]" value="{{ $faq['id'] ?? '' }}">
-                                        <div class="mb-3">
-                                            <label class="form-label ledger-label">Question</label>
-                                            <input type="text" name="faqs[{{ $index }}][question]" value="{{ $faq['question'] }}" class="form-control ledger-input @error('faqs.' . $index . '.question') is-invalid @enderror">
-                                            @error('faqs.' . $index . '.question')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="mb-0">
-                                            <label class="form-label ledger-label">Answer</label>
-                                            <textarea name="faqs[{{ $index }}][answer]" rows="3" class="form-control ledger-input @error('faqs.' . $index . '.answer') is-invalid @enderror">{{ $faq['answer'] }}</textarea>
-                                            @error('faqs.' . $index . '.answer')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @else
-                                <div class="faq-item mb-3 p-3 rounded-3 bg-white border">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <span class="faq-badge">FAQ #1</span>
-                                        <button type="button" class="btn btn-sm btn-outline-danger remove-faq">Remove</button>
-                                    </div>
-                                    <input type="hidden" name="faqs[0][id]" value="">
-                                    <div class="mb-3">
-                                        <label class="form-label ledger-label">Question</label>
-                                        <input type="text" name="faqs[0][question]" class="form-control ledger-input">
-                                    </div>
-                                    <div class="mb-0">
-                                        <label class="form-label ledger-label">Answer</label>
-                                        <textarea name="faqs[0][answer]" rows="3" class="form-control ledger-input"></textarea>
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-                        <p id="faq-empty-msg" class="text-secondary small d-none">No FAQs added yet. Click "Add FAQ" to create one.</p>
+    <div id="faq-items">
+        @if(old('faqs'))
+            @foreach(old('faqs') as $index => $faq)
+                <div class="faq-item mb-3 p-3 rounded-3 bg-white border">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="faq-badge">FAQ #{{ $index + 1 }}</span>
+                        <button type="button" class="btn btn-sm btn-outline-danger remove-faq">Remove</button>
                     </div>
+                    <input type="hidden" name="faqs[{{ $index }}][id]" value="{{ $faq['id'] ?? '' }}">
+                    <div class="mb-3">
+                        <label class="form-label ledger-label">Question</label>
+                        <input type="text" name="faqs[{{ $index }}][question]" value="{{ $faq['question'] }}" class="form-control ledger-input @error('faqs.' . $index . '.question') is-invalid @enderror">
+                        @error('faqs.' . $index . '.question')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label ledger-label">Answer</label>
+                        <textarea name="faqs[{{ $index }}][answer]" rows="3" class="form-control ledger-input @error('faqs.' . $index . '.answer') is-invalid @enderror">{{ $faq['answer'] }}</textarea>
+                        @error('faqs.' . $index . '.answer')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            @endforeach
+        @elseif(isset($blog) && $blog->faqs && $blog->faqs->count())
+            @foreach($blog->faqs as $index => $faq)
+                <div class="faq-item mb-3 p-3 rounded-3 bg-white border">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="faq-badge">FAQ #{{ $index + 1 }}</span>
+                        <button type="button" class="btn btn-sm btn-outline-danger remove-faq">Remove</button>
+                    </div>
+                    <input type="hidden" name="faqs[{{ $index }}][id]" value="{{ $faq->id }}">
+                    <div class="mb-3">
+                        <label class="form-label ledger-label">Question</label>
+                        <input type="text" name="faqs[{{ $index }}][question]" value="{{ $faq->question }}" class="form-control ledger-input">
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label ledger-label">Answer</label>
+                        <textarea name="faqs[{{ $index }}][answer]" rows="3" class="form-control ledger-input">{{ $faq->answer }}</textarea>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+    </div>
+
+    <p id="faq-empty-msg" class="text-secondary small {{ (old('faqs') || (isset($blog) && $blog->faqs && $blog->faqs->count())) ? 'd-none' : '' }}">
+        No FAQs added yet. Click "Add FAQ" to create one.
+    </p>
+</div>
 
                     <div class="mt-4 d-flex justify-content-end">
                         <button type="submit" class="btn btn-brass px-4">Update Blog</button>

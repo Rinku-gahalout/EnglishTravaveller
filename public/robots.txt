@@ -1,2 +1,5 @@
 User-agent: *
-Disallow:
+Allow: /
+Crawl-delay: 2
+
+Sitemap: https://www.englishtraveller.us/sitemap.xml

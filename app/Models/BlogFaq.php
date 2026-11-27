@@ -11,6 +11,8 @@ class BlogFaq extends Model
         'question',
         'answer',
     ];
+    
+    protected $touches = ['blog'];
 
     public function blog()
     {

@@ -6,74 +6,181 @@ use Illuminate\Http\Request;
 use App\Models\Blog;
 use App\Models\Category;
 use App\Models\Subcategory;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use DOMDocument;
 use DOMXPath;
 
 class BlogController extends Controller
 {
-    public function Blog($cate_subcate)
-    {
-        $category = Category::where('slug', $cate_subcate)->first();
 
-        if (!$category) {
-            $category = Subcategory::where('slug', $cate_subcate)->first();
-        }
+public function Blog(Request $request, $cate_subcate)
+{
+    $category = Category::where('slug', $cate_subcate)->first();
 
-        $blogs = Blog::with(['category', 'subcategory'])
-            ->where('is_draft', 0)
-            ->where(function ($query) use ($cate_subcate) {
-                $query->whereHas('category', function ($q) use ($cate_subcate) {
-                    $q->where('slug', $cate_subcate);
-                })
-                ->orWhereHas('subcategory', function ($q) use ($cate_subcate) {
-                    $q->where('slug', $cate_subcate);
-                });
-            })
-            ->latest()
-            ->paginate(6);
-
-        return view('blogs.blog', compact('blogs', 'category'));
+    if (!$category) {
+        $category = Subcategory::where('slug', $cate_subcate)->first();
     }
+
+    $query = trim($request->get('q', ''));
+
+    $blogs = Blog::with(['category', 'subcategory'])
+        ->where('is_draft', 0)
+        ->where(function ($q) use ($cate_subcate) {
+
+            $q->whereHas('category', function ($cq) use ($cate_subcate) {
+                $cq->where('slug', $cate_subcate);
+            })
+
+            ->orWhereHas('subcategory', function ($sq) use ($cate_subcate) {
+                $sq->where('slug', $cate_subcate);
+            });
+        });
+
+
+    // Search filter
+    if ($query !== '') {
+
+        $escapedQuery = str_replace(
+            ['\\', '%', '_'],
+            ['\\\\', '\%', '\_'],
+            $query
+        );
+
+        $searchTerm = '%' . $escapedQuery . '%';
+
+        $blogs->where(function ($q) use ($searchTerm) {
+
+            $q->where(
+                'blog_heading',
+                'LIKE',
+                $searchTerm
+            )
+
+            ->orWhere(
+                'blog_description',
+                'LIKE',
+                $searchTerm
+            )
+
+            ->orWhere(
+                'meta_title',
+                'LIKE',
+                $searchTerm
+            )
+
+            ->orWhere(
+                'meta_keywords',
+                'LIKE',
+                $searchTerm
+            );
+        });
+    }
+
+
+    // Pagination (newest published first)
+    $blogs = $this->orderNewestFirst($blogs)
+        ->paginate(6)
+        ->appends(
+            $request->only('q')
+        );
+
+
+    return view(
+        'blogs.blog',
+        compact(
+            'blogs',
+            'category',
+            'query'
+        )
+    );
+}
 
 public function BlogDetails($cate_subcate, $blog_slug)
 {
     $blog = Blog::with(['category', 'subcategory', 'faqs'])
         ->where('is_draft', 0)
+        // Category rule: subcategory slug wins, else category slug
+        ->where(function ($q) use ($cate_subcate) {
+            $q->whereHas('subcategory', fn ($s) => $s->where('slug', $cate_subcate))
+              ->orWhere(function ($q2) use ($cate_subcate) {
+                  $q2->whereNull('subcategory_id')
+                     ->whereHas('category', fn ($c) => $c->where('slug', $cate_subcate));
+              });
+        })
+        // Candidates: exact blog_url match, or blogs with no blog_url
+        ->where(function ($q) use ($blog_slug) {
+            $q->where('blog_url', $blog_slug)
+              ->orWhereNull('blog_url')
+              ->orWhere('blog_url', '');
+        })
         ->get()
-        ->first(function ($item) use ($cate_subcate, $blog_slug) {
+        ->first(function ($item) use ($blog_slug) {
+            // Priority 1: blog_url, Priority 2: slug from blog_heading
+            $slug = !empty($item->blog_url)
+                ? $item->blog_url
+                : Str::slug($item->blog_heading);
 
-            $slug = $item->subcategory->slug ?? $item->category->slug;
-
-            return $slug === $cate_subcate
-                && Str::slug($item->blog_heading) === $blog_slug;
+            return $slug === $blog_slug;
         });
 
     abort_if(!$blog, 404);
 
-    [$content, $toc] = $this->generateTocFromContent($blog->blog_description);
+    [$content, $toc] = $this->generateTocFromContent(
+        $blog->blog_description
+    );
 
-    $relatedPosts = Blog::with(['category', 'subcategory']) // <-- eager load added
-        ->where('is_draft', 0)
-        ->where('id', '!=', $blog->id)
-        ->where(function ($q) use ($blog) {
-            if ($blog->subcategory_id) {
-                $q->where('subcategory_id', $blog->subcategory_id);
-            } else {
-                $q->where('category_id', $blog->category_id);
-            }
-        })
-        ->latest()
+    $relatedPosts = $this->orderNewestFirst(
+            Blog::with(['category', 'subcategory'])
+                ->where('is_draft', 0)
+                ->where('id', '!=', $blog->id)
+                ->where(function ($q) use ($blog) {
+
+                    if ($blog->subcategory_id) {
+                        $q->where('subcategory_id', $blog->subcategory_id);
+                    } else {
+                        $q->where('category_id', $blog->category_id);
+                    }
+
+                })
+        )
         ->take(4)
         ->get()
         ->filter(function ($post) {
-            // drop any post that has neither category nor subcategory,
-            // since route() would throw without a valid cate_subcate slug
             return $post->subcategory || $post->category;
         });
 
-    return view('blogs.blog_details', compact('blog', 'content', 'toc', 'relatedPosts'));
+    return view(
+        'blogs.blog_details',
+        compact(
+            'blog',
+            'content',
+            'toc',
+            'relatedPosts',
+            'cate_subcate'
+        )
+    );
 }
+
+
+/**
+ * Newest published first.
+ * Uses published_at (falls back to created_at). If the published_at
+ * column has not been migrated yet, it safely falls back to created_at
+ * so the page never throws a 500.
+ */
+private function orderNewestFirst($query)
+{
+    if (Schema::hasColumn('blogs', 'published_at')) {
+        $query->orderByRaw('COALESCE(published_at, created_at) DESC');
+    } else {
+        $query->orderByDesc('created_at');
+    }
+
+    return $query->orderByDesc('id');
+}
+
+
 /**
  * Parses HTML content, injects unique ids into <h2>/<h3> tags,
  * and returns [modifiedHtml, tocArray]

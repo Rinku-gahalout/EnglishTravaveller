@@ -5,6 +5,31 @@
     $draftCount = DB::table('blogs')->where('is_draft', 1)->whereNull('deleted_at')->count();
 @endphp --}}
 
+@php
+    use Illuminate\Support\Facades\DB;
+
+    // Active NEW blogs only
+    $blogCount = DB::table('blogs')
+        ->join('categories', 'blogs.category_id', '=', 'categories.id')
+        ->where('blogs.is_draft', 0)
+        ->whereNull('blogs.deleted_at')
+        ->where('categories.slug', '!=', 'old-blog')
+        ->count();
+
+    // Draft blogs
+    $draftCount = DB::table('blogs')
+        ->where('is_draft', 1)
+        ->whereNull('deleted_at')
+        ->count();
+
+    // Trash blogs
+    $trashCount = DB::table('blogs')
+        ->whereNotNull('deleted_at')
+        ->count();
+@endphp
+
+
+
 <nav class="l-navbar show" id="nav-bar">
     <nav class="nav">
         <div>
@@ -18,12 +43,22 @@
                     <i class='bx bx-grid-alt nav_icon'></i>
                     <span class="nav_name">Home</span>
                 </a>
+                
+                
+<a href="{{ route('admin.blogs.index') }}"
+    class="nav_link {{ request()->routeIs('admin.blogs.index') ? 'active' : '' }}">
 
-                <a href="{{ route('admin.blogs.index') }}"
-                    class="nav_link {{ request()->routeIs('admin.blogs.index') ? 'active' : '' }}">
-                    <i class='bx bx-plus-circle nav_icon'></i>
-                    <span class="nav_name">Blog</span>
-                </a>
+    <i class='bx bx-plus-circle nav_icon'></i>
+
+    <span class="nav_name">Blog</span>
+
+    @if($blogCount > 0)
+        <span class="badge">{{ $blogCount }}</span>
+    @endif
+
+</a>
+
+
 
                 <a href="{{ route('admin.categories.listCategory') }}"
                     class="nav_link {{ request()->routeIs('admin.categories.listCategory') ? 'active' : '' }}">
@@ -37,25 +72,37 @@
                     <span class="nav_name">Subcategory</span>
                 </a>
 
-                <a href="{{ route('admin.blogs.drafts') }}"
-                    class="nav_link {{ request()->routeIs('admin.blogs.drafts') ? 'active' : '' }}">
-                    <i class='bx bx-pencil nav_icon'></i>
-                    <span class="nav_name">Draft</span>
-                    {{-- @if ($draftCount > 0)
-                        <span class="badge">{{ $draftCount }}</span>
-                    @endif --}}
-                </a>
+              <a href="{{ route('admin.blogs.drafts') }}"
+    class="nav_link {{ request()->routeIs('admin.blogs.drafts') ? 'active' : '' }}">
 
-                @if(auth('admin')->user()?->role === 'admin')
-                    <a href="{{ route('admin.blogs.trash') }}"
-                        class="nav_link {{ request()->routeIs('admin.blogs.trash') ? 'active' : '' }}">
-                        <i class='bx bx-trash nav_icon'></i>
-                        <span class="nav_name">Trash</span>
-                        {{-- @if ($trashCount > 0)
-                            <span class="badge">{{ $trashCount }}</span>
-                        @endif --}}
-                    </a>
-                @endif
+    <i class='bx bx-pencil nav_icon'></i>
+
+    <span class="nav_name">Draft</span>
+
+    @if($draftCount > 0)
+        <span class="badge">{{ $draftCount }}</span>
+    @endif
+
+</a>
+
+
+             @if(auth('admin')->user()?->role === 'admin')
+
+    <a href="{{ route('admin.blogs.trash') }}"
+        class="nav_link {{ request()->routeIs('admin.blogs.trash') ? 'active' : '' }}">
+
+        <i class='bx bx-trash nav_icon'></i>
+
+        <span class="nav_name">Trash</span>
+
+        @if($trashCount > 0)
+            <span class="badge">{{ $trashCount }}</span>
+        @endif
+
+    </a>
+
+@endif
+
                 @if(auth('admin')->user()?->role === 'admin')
                     <a href="{{ route('admin.users.index') }}"
                         class="nav_link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
@@ -63,6 +110,14 @@
                         <span class="nav_name">Users</span>
                     </a>
                 @endif
+                
+                @if(auth('admin')->user()?->role === 'admin')
+     <a href="{{ route('admin.blogs.old') }}"
+        class="nav_link {{ request()->routeIs('admin.blogs.old') ? 'active' : '' }}">
+        <i class='bx bx-folder nav_icon'></i>
+        <span class="nav_name">Old Blogs</span>
+    </a>
+@endif
 
 
             </div>

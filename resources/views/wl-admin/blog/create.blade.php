@@ -58,54 +58,99 @@
                         </div>
                     </div>
 
-                    <div class="row g-3 mt-1">
-                        <div class="col-md-6">
-                            <label class="form-label ledger-label">Blog Heading</label>
-                            <input type="text" name="blog_heading" value="{{ old('blog_heading') }}" class="form-control ledger-input @error('blog_heading') is-invalid @enderror">
-                            @error('blog_heading')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label ledger-label">Image</label>
-                            <input type="file" id="image" name="image" accept="image/*"
-                                class="form-control ledger-input @error('image') is-invalid @enderror">
-                            @error('image')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <div class="mt-3">
-                                <img id="image-preview"
-                                     src="#"
-                                     alt="Preview"
-                                     style="display:none;max-width:250px;border-radius:10px;border:1px solid #ddd;padding:5px;">
-                            </div>
-                        </div>
-                    </div>
+<div class="row g-3 mt-1">
+    <div class="col-md-6">
+        <label class="form-label ledger-label">Blog Heading</label>
+        <input
+            type="text"
+            name="blog_heading"
+            value="{{ old('blog_heading') }}"
+            class="form-control ledger-input @error('blog_heading') is-invalid @enderror"
+        >
+
+        @error('blog_heading')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label ledger-label">Blog URL</label>
+        <input
+            type="text"
+            name="blog_url"
+            value="{{ old('blog_url') }}"
+            class="form-control ledger-input @error('blog_url') is-invalid @enderror"
+            placeholder="e.g. how-to-learn-laravel"
+        >
+
+        @error('blog_url')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+
+        <small class="text-secondary">
+            Use a URL-friendly slug, for example:
+            <strong>how-to-learn-laravel</strong>
+        </small>
+    </div>
+</div>
+
+<div class="row g-3 mt-1">
+    <div class="col-md-6">
+        <label class="form-label ledger-label">Image</label>
+        <input
+            type="file"
+            id="image"
+            name="image"
+            accept="image/*"
+            class="form-control ledger-input @error('image') is-invalid @enderror"
+        >
+
+        @error('image')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+
+        <div class="mt-3">
+            <img
+                id="image-preview"
+                src="#"
+                alt="Preview"
+                style="display:none;max-width:250px;border-radius:10px;border:1px solid #ddd;padding:5px;"
+            >
+        </div>
+    </div>
+</div>
 
                     <hr class="ledger-divider">
 
                     <h6 class="ledger-section-title">SEO / Meta</h6>
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label ledger-label d-flex justify-content-between">
-                                <span>Meta Title</span>
-                                <span id="meta-title-counter" class="ledger-counter">0 / 60</span>
-                            </label>
-                            <input type="text" id="meta_title" name="meta_title" value="{{ old('meta_title') }}"
-                                   maxlength="60"
-                                   class="form-control ledger-input @error('meta_title') is-invalid @enderror">
+          <label class="form-label ledger-label d-flex justify-content-between">
+    <span>Meta Title</span>
+    <span id="meta-title-counter" class="ledger-counter">0 / 60</span>
+</label>
+
+<input
+    type="text"
+    name="meta_title"
+    id="meta_title"
+    class="form-control"
+    maxlength="61"
+    value="{{ old('meta_title', $blog->meta_title ?? '') }}"
+>
+
                             <div id="meta-title-error" class="invalid-feedback-live"></div>
                             @error('meta_title')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label ledger-label">Alt Tag</label>
-                            <input type="text" name="alt_tag" value="{{ old('alt_tag') }}" class="form-control ledger-input @error('alt_tag') is-invalid @enderror">
-                            @error('alt_tag')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                        <!--<div class="col-md-6">-->
+                        <!--    <label class="form-label ledger-label">Alt Tag</label>-->
+                        <!--    <input type="text" name="alt_tag" value="{{ old('alt_tag') }}" class="form-control ledger-input @error('alt_tag') is-invalid @enderror">-->
+                        <!--    @error('alt_tag')-->
+                        <!--        <div class="invalid-feedback">{{ $message }}</div>-->
+                        <!--    @enderror-->
+                        <!--</div>-->
                     </div>
 
                     <div class="row g-3 mt-1">
@@ -153,57 +198,62 @@
 
                     <hr class="ledger-divider">
 
-                    <div class="mt-2">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="ledger-section-title mb-0">Blog FAQs</h6>
-                            <button type="button" id="add-faq" class="btn btn-sm btn-brass">+ Add FAQ</button>
-                        </div>
+                   <div class="mt-2">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="ledger-section-title mb-0">Blog FAQs</h6>
+        <button type="button" id="add-faq" class="btn btn-sm btn-brass">+ Add FAQ</button>
+    </div>
 
-                        <div id="faq-items">
-                            @if(old('faqs'))
-                                @foreach(old('faqs') as $index => $faq)
-                                    <div class="faq-item mb-3 p-3 rounded-3 bg-white border">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="faq-badge">FAQ #{{ $index + 1 }}</span>
-                                            <button type="button" class="btn btn-sm btn-outline-danger remove-faq">Remove</button>
-                                        </div>
-                                        <input type="hidden" name="faqs[{{ $index }}][id]" value="{{ $faq['id'] ?? '' }}">
-                                        <div class="mb-3">
-                                            <label class="form-label ledger-label">Question</label>
-                                            <input type="text" name="faqs[{{ $index }}][question]" value="{{ $faq['question'] }}" class="form-control ledger-input @error('faqs.' . $index . '.question') is-invalid @enderror">
-                                            @error('faqs.' . $index . '.question')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="mb-0">
-                                            <label class="form-label ledger-label">Answer</label>
-                                            <textarea name="faqs[{{ $index }}][answer]" rows="3" class="form-control ledger-input @error('faqs.' . $index . '.answer') is-invalid @enderror">{{ $faq['answer'] }}</textarea>
-                                            @error('faqs.' . $index . '.answer')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @else
-                                <div class="faq-item mb-3 p-3 rounded-3 bg-white border">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <span class="faq-badge">FAQ #1</span>
-                                        <button type="button" class="btn btn-sm btn-outline-danger remove-faq">Remove</button>
-                                    </div>
-                                    <input type="hidden" name="faqs[0][id]" value="">
-                                    <div class="mb-3">
-                                        <label class="form-label ledger-label">Question</label>
-                                        <input type="text" name="faqs[0][question]" class="form-control ledger-input">
-                                    </div>
-                                    <div class="mb-0">
-                                        <label class="form-label ledger-label">Answer</label>
-                                        <textarea name="faqs[0][answer]" rows="3" class="form-control ledger-input"></textarea>
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-                        <p id="faq-empty-msg" class="text-secondary small d-none">No FAQs added yet. Click "Add FAQ" to create one.</p>
+    <div id="faq-items">
+        @if(old('faqs'))
+            @foreach(old('faqs') as $index => $faq)
+                <div class="faq-item mb-3 p-3 rounded-3 bg-white border">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="faq-badge">FAQ #{{ $index + 1 }}</span>
+                        <button type="button" class="btn btn-sm btn-outline-danger remove-faq">Remove</button>
                     </div>
+                    <input type="hidden" name="faqs[{{ $index }}][id]" value="{{ $faq['id'] ?? '' }}">
+                    <div class="mb-3">
+                        <label class="form-label ledger-label">Question</label>
+                        <input type="text" name="faqs[{{ $index }}][question]" value="{{ $faq['question'] }}" class="form-control ledger-input @error('faqs.' . $index . '.question') is-invalid @enderror">
+                        @error('faqs.' . $index . '.question')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label ledger-label">Answer</label>
+                        <textarea name="faqs[{{ $index }}][answer]" rows="3" class="form-control ledger-input @error('faqs.' . $index . '.answer') is-invalid @enderror">{{ $faq['answer'] }}</textarea>
+                        @error('faqs.' . $index . '.answer')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            @endforeach
+        @elseif(isset($blog) && $blog->faqs && $blog->faqs->count())
+            @foreach($blog->faqs as $index => $faq)
+                <div class="faq-item mb-3 p-3 rounded-3 bg-white border">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="faq-badge">FAQ #{{ $index + 1 }}</span>
+                        <button type="button" class="btn btn-sm btn-outline-danger remove-faq">Remove</button>
+                    </div>
+                    <input type="hidden" name="faqs[{{ $index }}][id]" value="{{ $faq->id }}">
+                    <div class="mb-3">
+                        <label class="form-label ledger-label">Question</label>
+                        <input type="text" name="faqs[{{ $index }}][question]" value="{{ $faq->question }}" class="form-control ledger-input">
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label ledger-label">Answer</label>
+                        <textarea name="faqs[{{ $index }}][answer]" rows="3" class="form-control ledger-input">{{ $faq->answer }}</textarea>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+    </div>
+
+    <p id="faq-empty-msg" class="text-secondary small {{ (old('faqs') || (isset($blog) && $blog->faqs && $blog->faqs->count())) ? 'd-none' : '' }}">
+        No FAQs added yet. Click "Add FAQ" to create one.
+    </p>
+</div>
 
                     <div class="mt-4 d-flex justify-content-end">
                         <button type="submit" class="btn btn-brass px-4">Create Blog</button>
@@ -215,6 +265,29 @@
 @endsection
 
 @section('scripts')
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const metaTitleInput = document.getElementById('meta_title');
+    const metaTitleCounter = document.getElementById('meta-title-counter');
+    const maxLength = 61;
+
+    function updateCounter() {
+        // Hard enforce the cutoff in case maxlength gets bypassed
+        if (metaTitleInput.value.length > maxLength) {
+            metaTitleInput.value = metaTitleInput.value.slice(0, maxLength);
+        }
+        metaTitleCounter.textContent = `${metaTitleInput.value.length} / ${maxLength}`;
+    }
+
+    updateCounter(); // handle old() value on page load
+    metaTitleInput.addEventListener('input', updateCounter);
+});
+</script>
+
+
+
     <script>
         /* ==========================================================
            Each feature below is fully isolated in its own try/catch.
@@ -232,50 +305,52 @@
         });
 
         /* ---------- 1. Meta title live 60-char validation ---------- */
-        function initMetaTitleCounter() {
-            try {
-                const metaTitleInput = document.getElementById('meta_title');
-                const metaTitleCounter = document.getElementById('meta-title-counter');
-                const metaTitleError = document.getElementById('meta-title-error');
-                const blogForm = document.getElementById('blog-form');
-                const META_TITLE_LIMIT = 60;
+     function initMetaTitleCounter() {
+    try {
+        const metaTitleInput = document.getElementById('meta_title');
+        const metaTitleCounter = document.getElementById('meta-title-counter');
+        const metaTitleError = document.getElementById('meta-title-error');
+        const blogForm = document.getElementById('blog-form');
+        const META_TITLE_LIMIT = 60;
 
-                if (!metaTitleInput || !metaTitleCounter) return;
+        if (!metaTitleInput || !metaTitleCounter) return;
 
-                function validateMetaTitle() {
-                    const len = metaTitleInput.value.length;
-                    metaTitleCounter.textContent = len + ' / ' + META_TITLE_LIMIT;
+        function validateMetaTitle() {
+            const len = metaTitleInput.value.length;
+            metaTitleCounter.textContent = len + ' / ' + META_TITLE_LIMIT;
 
-                    metaTitleCounter.classList.remove('ledger-counter-danger', 'ledger-counter-warning');
-                    metaTitleInput.classList.remove('is-invalid');
-                    metaTitleError.textContent = '';
+            metaTitleCounter.classList.remove('ledger-counter-danger', 'ledger-counter-warning');
+            metaTitleInput.classList.remove('is-invalid');
+            metaTitleError.textContent = '';
 
-                    if (len >= META_TITLE_LIMIT) {
-                        metaTitleCounter.classList.add('ledger-counter-danger');
-                        metaTitleInput.classList.add('is-invalid');
-                        metaTitleError.textContent = 'Meta title cannot exceed ' + META_TITLE_LIMIT + ' characters.';
-                    } else if (len >= META_TITLE_LIMIT - 10) {
-                        metaTitleCounter.classList.add('ledger-counter-warning');
-                    }
-                }
-
-                metaTitleInput.addEventListener('input', validateMetaTitle);
-                metaTitleInput.addEventListener('keyup', validateMetaTitle);
-                validateMetaTitle(); // run once on load (covers old() repopulated value)
-
-                if (blogForm) {
-                    blogForm.addEventListener('submit', function (e) {
-                        validateMetaTitle();
-                        if (metaTitleInput.value.length > META_TITLE_LIMIT) {
-                            e.preventDefault();
-                            metaTitleInput.focus();
-                        }
-                    });
-                }
-            } catch (err) {
-                console.error('Meta title counter failed to initialize:', err);
+            if (len > META_TITLE_LIMIT) {
+                // 61+ characters — show warning
+                metaTitleCounter.classList.add('ledger-counter-danger');
+                metaTitleInput.classList.add('is-invalid');
+                metaTitleError.textContent = 'Meta title cannot exceed ' + META_TITLE_LIMIT + ' characters.';
+            } else if (len >= META_TITLE_LIMIT - 10) {
+                // 50–60 characters — soft "getting close" warning, remove this else-if if you don't want it
+                metaTitleCounter.classList.add('ledger-counter-warning');
             }
         }
+
+        metaTitleInput.addEventListener('input', validateMetaTitle);
+        metaTitleInput.addEventListener('keyup', validateMetaTitle);
+        validateMetaTitle();
+
+        if (blogForm) {
+            blogForm.addEventListener('submit', function (e) {
+                validateMetaTitle();
+                if (metaTitleInput.value.length > META_TITLE_LIMIT) {
+                    e.preventDefault();
+                    metaTitleInput.focus();
+                }
+            });
+        }
+    } catch (err) {
+        console.error('Meta title counter failed to initialize:', err);
+    }
+}
 
         /* ---------- 2. FAQ add / remove ---------- */
         function initFaqCrud() {

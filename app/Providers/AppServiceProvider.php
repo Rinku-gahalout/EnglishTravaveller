@@ -25,26 +25,39 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Header: categories + subcategories, filtered by locale
-        View::composer(
-            ['partials.header', 'es.partials.header'],
-            function ($view) {
-                $locale = App::getLocale();
+View::composer(
+    ['partials.header', 'es.partials.header'],
+    function ($view) {
 
-                if ($locale === 'es') {
-                    // Spanish header → ONLY Spanish categories
-                    $categories = Category::with('subcategories')
-                        ->whereIn('slug', ['articulos', 'espanol'])
-                        ->get();
-                } else {
-                    // English header → EXCLUDE Spanish categories
-                    $categories = Category::with('subcategories')
-                        ->whereNotIn('slug', ['articulos', 'espanol'])
-                        ->get();
+        $locale = App::getLocale();
+
+        if ($locale === 'es') {
+
+            // Spanish header → ONLY Spanish categories
+            $categories = Category::with([
+                'subcategories' => function ($query) {
+                    $query->orderBy('name', 'asc');
                 }
+            ])
+            ->whereIn('slug', ['articulos', 'espanol'])
+            ->whereNotIn('slug', ['old-blog'])
+            ->get();
 
-                $view->with('categories', $categories);
-            }
-        );
+        } else {
+
+            // English header → EXCLUDE Spanish + Old Blog categories
+            $categories = Category::with([
+                'subcategories' => function ($query) {
+                    $query->orderBy('name', 'asc');
+                }
+            ])
+            ->whereNotIn('slug', ['articulos', 'espanol', 'old-blog'])
+            ->get();
+        }
+
+        $view->with('categories', $categories);
+    }
+);
 
         // Footer: categories + subcategories, filtered by locale and hidden slugs
         View::composer(

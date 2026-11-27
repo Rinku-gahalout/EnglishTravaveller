@@ -10,10 +10,19 @@ use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\SubcategoryController;
 use App\Http\Controllers\admin\BlogsController;
 use App\Http\Controllers\admin\AdminUserController;
+use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SitemapController;
 
 
+
+
+Route::get('/clear-cache', function () {
+    Artisan::call('optimize:clear');
+    return '<h3>Application cache cleared successfully!</h3><pre>' . Artisan::output() . '</pre>';
+});
 Route::middleware(['admin.guest'])->group(function (){
-    Route::get('/admin/login',[AdminController::class,'login'])->name('admin.login');
+    Route::get('/web/login',[AdminController::class,'login'])->name('admin.login');
     Route::post('/admin/login/authentication', [AdminController::class, 'authentication'])->name('admin.login.authentication');
 });
 
@@ -26,10 +35,13 @@ Route::middleware(['admin.auth'])->group(function () {
     Route::get('/admin/category',[CategoryController::class,'add_category'])->name('admin.add.category');
     Route::post('/admin/category',[CategoryController::class,'store_category'])->name('admin.category.store');
     Route::get('/admin/category/{id}/edit',[CategoryController::class,'edit_category'])->name('admin.category.edit');
+
+
     Route::put('/admin/category/{id}',[CategoryController::class,'update_category'])->name('admin.category.update');
     Route::delete('/admin/category/{id}',[CategoryController::class,'destroy_category'])->name('admin.category.destroy');
 
     // subcategory routes
+    
     Route::get('/admin/subcategories',[SubcategoryController::class,'listSubcategory'])->name('admin.subcategories.list');
     Route::get('/admin/subcategory/add',[SubcategoryController::class,'add_subcategory'])->name('admin.add.subcategory');
     Route::post('/admin/subcategory',[SubcategoryController::class,'store_subcategory'])->name('admin.subcategory.store');
@@ -39,6 +51,8 @@ Route::middleware(['admin.auth'])->group(function () {
 
     // blog routes
     Route::get('/admin/blogs',[BlogsController::class,'index'])->name('admin.blogs.index');
+    Route::get('/admin/blogs/old', [BlogsController::class, 'oldBlogs'])
+    ->name('admin.blogs.old');
     Route::get('/admin/blogs/drafts',[BlogsController::class,'drafts'])->name('admin.blogs.drafts');
     Route::get('/admin/blogs/trash',[BlogsController::class,'trash'])->name('admin.blogs.trash');
     Route::get('/admin/blog/create',[BlogsController::class,'create'])->name('admin.blog.create');
@@ -56,7 +70,29 @@ Route::middleware(['admin.auth'])->group(function () {
     Route::get('/admin/users/{id}/edit',[AdminUserController::class,'edit'])->name('admin.users.edit');
     Route::put('/admin/users/{id}',[AdminUserController::class,'update'])->name('admin.users.update');
     Route::delete('/admin/users/{id}',[AdminUserController::class,'destroy'])->name('admin.users.destroy');
+    Route::get('/draft-blog/{cate_subcate}/{blog_slug}', [BlogsController::class, 'DraftBlogDetails'])
+    ->name('draftblogdetails');
 });
+
+Route::redirect(
+    '/baggage-policy/alaska-airlines-checked-baggage-policy-size-allowance-weights-fees-explained',
+    '/baggage-policy/alaska-airlines-baggage-policy',
+    301
+);
+
+Route::redirect(
+    '/baggage-policy/allegiant-air-baggage-policy-2026-complete-guide-to-fees-size-rules',
+    '/baggage-policy/allegiant-air-baggage-policy',
+    301
+);
+
+Route::redirect(
+    '/baggage/allegiant-air-baggage-policy-2026-complete-guide-to-fees-size-rules',
+    '/baggage-policy/allegiant-air-baggage-policy',
+    301
+);
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index']) ->name('sitemap');
 
 Route::get('/', [IndexPageController::class, 'index'])->name('home');
 // Route::get('/blog', [BlogController::class, 'Blog'])->name('blog');
@@ -65,6 +101,18 @@ Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/disclaimer', [PageController::class, 'disclaimer'])->name('disclaimer');
 Route::get('/privacy-policy', [PageController::class, 'privacyPolicy'])->name('privacyPolicy');
 Route::get('/term-condition', [PageController::class, 'term_conditions'])->name('term_conditions');
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+
+// Author page
+Route::get('/author/{authorName}', [PageController::class, 'authorBlogs'])
+    ->name('author.blogs');
+ 
+// Live/AJAX search used by the header dropdown
+Route::get('/ajax-search', [SearchController::class, 'ajaxSearch'])->name('search.ajax');
 
 Route::get('/{cate_subcate}', [BlogController::class, 'Blog'])->name('categoryblogs')->where('cate_subcate', '[a-zA-Z0-9\-]+');
 Route::get('/{cate_subcate}/{blog_slug}', [BlogController::class, 'BlogDetails'])->name('blogdetails')->where('cate_subcate', '[a-zA-Z0-9\-]+')->where('blog_slug', '[a-zA-Z0-9\-]+');
+
+
+

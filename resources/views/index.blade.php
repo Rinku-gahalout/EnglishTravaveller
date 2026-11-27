@@ -1,6 +1,29 @@
 @extends('layouts.app')
 
-@section('title', 'Home')
+@section('title', 'Cheap Flights & Exclusive Deals - Book with EnglishTraveller')
+
+@section('meta_description', 'Book affordable domestic and international flights with EnglishTraveller. Explore competitive fares, special offers and convenient booking with travel support.')
+
+@section('meta_keywords', 'Book Flights Ticket, Flight Booking, online flight ticket booking, Flights, airlines tickets')
+
+@section('canonical', url('/'))
+
+@section('og_type', 'website')
+
+@section('og_url', url('/'))
+
+@section('og_title', 'Cheap Flights & Exclusive Deals - Book with EnglishTraveller')
+
+@section('og_description', 'Book affordable domestic and international flights with EnglishTraveller. Explore competitive fares, special offers and convenient booking with travel support.')
+
+{{-- LCP FIX #1: preload the hero image (responsive) so the browser fetches it immediately.
+     Requires `@stack('head')` inside <head> in layouts/app.blade.php --}}
+@push('head')
+    <link rel="preload" as="image" fetchpriority="high"
+          href="/images/hero-1920.webp"
+          imagesrcset="/images/hero-640.webp 640w, /images/hero-1024.webp 1024w, /images/hero-1920.webp 1920w"
+          imagesizes="100vw">
+@endpush
 
 @section('content')
 
@@ -8,20 +31,34 @@
      HTML
 ============================================================== --}}
 
-    <!-- Swiper CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-
     {{-- =============================== --}}
     {{-- BOOKING SECTION                 --}}
     {{-- =============================== --}}
     <section class="booking-section">
+
+        {{-- LCP FIX #2: responsive srcset, fetchpriority=high, async decode, descriptive alt --}}
+       <img
+    src="/images/image.webp"
+    srcset="
+        /images/image-640.webp 640w,
+        /images/image-1024.webp 1024w,
+        /images/image.webp 1920w
+    "
+    sizes="100vw"
+    class="booking-hero"
+    width="1920"
+    height="800"
+    fetchpriority="high"
+    loading="eager"
+    decoding="async"
+    alt="Airplane flying above the clouds at sunset">
+
         <div class="booking-content">
 
             <div class="booking-text">
-                <h2>An Airtrip<br>Booking Agent</h2>
+                <h1>Make Your Flight Booking Easy</h1>
                 <p>
-                    Navigate the Skies, Tailored Your Way.<br>
-                    Your Ideal Flight Experience Awaits. Every Time You Soar.
+                   Fly with Confidence, soar beyond expectations. Your trusted path to every destination.
                 </p>
             </div>
 
@@ -39,43 +76,77 @@
                 </div>
 
                 <form>
+                    {{-- Above-the-fold icons: no loading="lazy", explicit size --}}
                     <div class="input-box form-field">
                         <input type="text" class="floating-input" id="cityField" required>
                         <label class="floating-label" for="cityField" data-text="Enter city or airport"></label>
-                        <img src="{{ asset('images/airplane.png') }}" alt="">
+                        <img src="{{ asset('images/airplane.png') }}" width="25" height="25" alt="airplane">
                     </div>
 
                     <div class="input-box form-field">
                         <input type="text" class="floating-input" id="destField" required>
                         <label class="floating-label" for="destField" data-text="Enter destination"></label>
-                        <img src="{{ asset('images/plane.png') }}" alt="">
+                        <img src="{{ asset('images/plane.png') }}" width="25" height="25" alt="plane">
                     </div>
 
                     <div class="input-box">
-                        <select>
-                            <option>Passenger</option>
-                            <option>1 Adult</option>
-                            <option>2 Adults</option>
-                            <option>3 Adults</option>
+                        <label for="passengers" class="visually-hidden">
+                            Passengers
+                        </label>
+
+                        <select id="passengers" name="passengers">
+                            <option value="">Passenger</option>
+                            <option value="1">1 Adult</option>
+                            <option value="2">2 Adults</option>
+                            <option value="3">3 Adults</option>
                         </select>
-                        <img src="{{ asset('images/profile.png') }}" alt="">
+
+                        <img src="{{ asset('images/profile.png') }}" width="25" height="25" alt="profile" aria-hidden="true">
                     </div>
 
                     <div class="date-group">
+
                         <div class="input-box">
-                            <input type="date" id="departDate">
-                            <img src="{{ asset('images/calendar.png') }}" alt="">
+                            <label for="departDate" class="visually-hidden">
+                                Departure Date
+                            </label>
+
+                            <input
+                                type="date"
+                                id="departDate"
+                                name="departDate"
+                                aria-label="Departure Date"
+                            >
+
+                            <img src="{{ asset('images/calendar.png') }}" width="25" height="25" alt="calendar" aria-hidden="true">
                         </div>
 
                         <div class="input-box" id="returnDateBox">
-                            <input type="date" id="returnDate">
-                            <img src="{{ asset('images/calendar.png') }}" alt="">
+                            <label for="returnDate" class="visually-hidden">
+                                Return Date
+                            </label>
+
+                            <input
+                                type="date"
+                                id="returnDate"
+                                name="returnDate"
+                                aria-label="Return Date"
+                            >
+
+                            <img src="{{ asset('images/calendar.png') }}" width="25" height="25" alt="calendar" aria-hidden="true">
                         </div>
+
                     </div>
 
                     <button type="submit">
                         Search Now
-                        <img src="{{ asset('images/search-normal.png') }}" alt="Search">
+                        <img
+                            src="{{ asset('images/search-normal.png') }}"
+                            width="25"
+                            height="25"
+                            alt=""
+                            aria-hidden="true"
+                        >
                     </button>
                 </form>
             </div>
@@ -92,41 +163,38 @@
             <!-- Left -->
             <div class="about-image">
                 <div class="blob">
-                    <img src="{{ asset('images/Group 1597884711.png') }}" alt="About Image">
+                    <img src="{{ asset('images/about_us.webp') }}" loading="lazy" alt="About Image">
                 </div>
 
                 <div class="circle circle1">
-                    <img src="{{ asset('images/ellipse_992_3x.webp') }}" alt="Destination highlight 1">
+                    <img src="{{ asset('images/about_us_ellipse_1.webp') }}" loading="lazy" alt="Destination highlight 1">
                 </div>
 
                 <div class="circle circle2">
-                    <img src="{{ asset('images/ellipse_993_3x.webp') }}" alt="Destination highlight 2">
+                    <img src="{{ asset('images/about_us_ellipse_2.webp') }}" loading="lazy" alt="Destination highlight 2">
                 </div>
 
                 <div class="circle circle3">
-                    <img src="{{ asset('images/ellipse_994_3x.webp') }}" alt="Destination highlight 3">
+                    <img src="{{ asset('images/about_us_ellipse_3.webp') }}" loading="lazy" alt="Destination highlight 3">
                 </div>
             </div>
 
             <!-- Right -->
             <div class="about-contents">
 
-                <span class="about-subtitle reveal-item">About Us</span>
+                <span class="about-subtitle reveal-item">About Us</span><br>
 
                 <h2 class="reveal-item">
-                    Explore All Airlines Of The World With Us.
+                    Discover the World With Us
                 </h2>
 
                 <p class="reveal-item">
-                    Englishtraveller is your movement amigo who designs every one
-                    of your movements around the Worldwide with Markdown Flights
-                    Arrangements. Be it a latest possible moment flight or an
-                    understudy retreat, plan a reasonable outing with our travel
-                    planners who will help you during the most common way of
-                    reserving for Homegrown and Global Flights.
+                 In English Traveller, we built a journey that makes your every moment memorable. 
+                 We built that into every traveler thinks about before flying: a price that you can trust,
+                 and a person whom you can call when your schedule changes.
                 </p>
 
-                <a href="#" class="btn reveal-item">
+                <a href="{{ route('about') }}" class="btn reveal-item" aria-label="Read more about English Traveller">
                     Read more
                     <span>→</span>
                 </a>
@@ -151,25 +219,25 @@
                         <div class="international-container">
 
                             <div class="image-box reveal-left">
-                                <img src="{{ asset('images/destination.png') }}" alt="San Francisco">
+                                <img src="{{ asset('images/flights_to_sanfransico.webp') }}" loading="lazy" alt="San Francisco">
                             </div>
 
                             <div class="stack-content reveal-right">
                                 <div class="number" data-number="01">01</div>
 
                                 <span class="sub-title">
-                                    Explore destination
+                                    Explore Different Destinations
                                 </span>
 
-                                <h2>Flights to San Francisco</h2>
+                                <h2>Fly to San Francisco</h2>
 
                                 <p>
-                                    Get best rates on the flights of San Francisco.
-                                    Know about the places to explore in San Francisco
-                                    and the best way to book at low prices.
+                                    Explore the world-famous Golden Gate Bridge, the historic federal prison, 
+                                    and winding block of Lombard Street through our flights to San Francisco.
+                                    Book your best flight at a low cost.
                                 </p>
 
-                                <a href="#" class="btn">
+                                <a href="#" class="btn" aria-label="Read more about flights to San Francisco">
                                     Read more <span>↗</span>
                                 </a>
                             </div>
@@ -184,7 +252,7 @@
                         <div class="international-container">
 
                             <div class="image-box reveal-left">
-                                <img src="{{ asset('images/destination.png') }}" alt="Paris">
+                                <img src="{{ asset('images/flights_to_paris.webp') }}" loading="lazy" alt="Paris">
                             </div>
 
                             <div class="stack-content reveal-right">
@@ -197,12 +265,12 @@
                                 <h2>Flights to Paris</h2>
 
                                 <p>
-                                    Get best rates on the flights of Paris.
-                                    Know about the places to explore in Paris
-                                    and the best way to book at low prices.
+                                   Get best rates on flights to Paris.
+                                   Explore the best places to be visited in Paris.
+                                   And also different ways to book the affordable flight tickets.
                                 </p>
 
-                                <a href="#" class="btn">
+                                <a href="#" class="btn" aria-label="Read more about flights to Paris">
                                     Read more <span>↗</span>
                                 </a>
                             </div>
@@ -217,7 +285,7 @@
                         <div class="international-container">
 
                             <div class="image-box reveal-left">
-                                <img src="{{ asset('images/destination.png') }}" alt="Tokyo">
+                                <img src="{{ asset('images/flights_to_tokyo.webp') }}" loading="lazy" alt="Tokyo">
                             </div>
 
                             <div class="stack-content reveal-right">
@@ -230,12 +298,11 @@
                                 <h2>Flights to Tokyo</h2>
 
                                 <p>
-                                    Get best rates on the flights of Tokyo.
-                                    Know about the places to explore in Tokyo
-                                    and the best way to book at low prices.
+                                    Get Budget-Friendly prices on the flights to Tokyo. 
+                                    Get to know morew about the best places, and cheap booking options.
                                 </p>
 
-                                <a href="#" class="btn">
+                                <a href="#" class="btn" aria-label="Read more about flights to Tokyo">
                                     Read more <span>↗</span>
                                 </a>
                             </div>
@@ -249,6 +316,7 @@
             <div class="swiper-pagination"></div>
         </div>
     </section>
+
     {{-- =============================== --}}
     {{-- DESTINATION SLIDER              --}}
     {{-- =============================== --}}
@@ -257,11 +325,11 @@
 
             <span class="sub-title reveal-item">Explore destination</span>
 
-            <h2 class="reveal-item">Get cheap flight to Ohio</h2>
+            <h2 class="reveal-item">Book Affordable Flights to Ohio</h2>
 
             <p class="description reveal-item">
-                Flying to Ohio soon, placed on the midwestern region, there are multiple beautiful
-                places to explore. Know about the different flight options available to choose the best.
+                Discover the Cedar Point, museums, and wildlife sanctuary of Ohio with us. 
+                By booking the affordable flights, passengers can enjoy the beauty of this great city.
             </p>
 
             <div class="swiper destination-swiper reveal-item">
@@ -272,12 +340,12 @@
                         <div class="flip-card">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front">
-                                    <img src="{{ asset('images/destination.png') }}" alt="Columbus">
+                                    <img src="{{ asset('images/australia.webp') }}" loading="lazy" alt="Columbus">
                                 </div>
                                 <div class="flip-card-back">
-                                    <img src="{{ asset('images/destination2.png') }}" alt="Columbus">
+                                    <img src="{{ asset('images/australia.webp') }}" loading="lazy" alt="Columbus">
                                     <div class="flip-card-caption">
-                                        <h4>Columbus</h4>
+                                        <h3>Columbus</h3>
                                         <p>Explore the city</p>
                                     </div>
                                 </div>
@@ -289,12 +357,12 @@
                         <div class="flip-card">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front">
-                                    <img src="{{ asset('images/destination.png') }}" alt="Cleveland">
+                                    <img src="{{ asset('images/brazil.webp') }}" loading="lazy" alt="Cleveland">
                                 </div>
                                 <div class="flip-card-back">
-                                    <img src="{{ asset('images/destination2.png') }}" alt="Cleveland">
+                                    <img src="{{ asset('images/brazil.webp') }}" loading="lazy" alt="Cleveland">
                                     <div class="flip-card-caption">
-                                        <h4>Cleveland</h4>
+                                        <h3>Cleveland</h3>
                                         <p>Lakefront views</p>
                                     </div>
                                 </div>
@@ -306,12 +374,12 @@
                         <div class="flip-card">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front">
-                                    <img src="{{ asset('images/destination.png') }}" alt="Cincinnati">
+                                    <img src="{{ asset('images/new_york.webp') }}" loading="lazy" alt="Cincinnati">
                                 </div>
                                 <div class="flip-card-back">
-                                    <img src="{{ asset('images/destination2.png') }}" alt="Cincinnati">
+                                    <img src="{{ asset('images/new_york.webp') }}" loading="lazy" alt="Cincinnati">
                                     <div class="flip-card-caption">
-                                        <h4>Cincinnati</h4>
+                                        <h3>Cincinnati</h3>
                                         <p>Historic charm</p>
                                     </div>
                                 </div>
@@ -323,12 +391,12 @@
                         <div class="flip-card">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front">
-                                    <img src="{{ asset('images/destination.png') }}" alt="Dayton">
+                                    <img src="{{ asset('images/australia.webp') }}" loading="lazy" alt="Dayton">
                                 </div>
                                 <div class="flip-card-back">
-                                    <img src="{{ asset('images/destination2.png') }}" alt="Dayton">
+                                    <img src="{{ asset('images/australia.webp') }}" loading="lazy" alt="Dayton">
                                     <div class="flip-card-caption">
-                                        <h4>Dayton</h4>
+                                        <h3>Dayton</h3>
                                         <p>Aviation heritage</p>
                                     </div>
                                 </div>
@@ -340,12 +408,12 @@
                         <div class="flip-card">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front">
-                                    <img src="{{ asset('images/destination.png') }}" alt="Toledo">
+                                    <img src="{{ asset('images/brazil.webp') }}" loading="lazy" alt="Toledo">
                                 </div>
                                 <div class="flip-card-back">
-                                    <img src="{{ asset('images/destination2.png') }}" alt="Toledo">
+                                    <img src="{{ asset('images/brazil.webp') }}" loading="lazy" alt="Toledo">
                                     <div class="flip-card-caption">
-                                        <h4>Toledo</h4>
+                                        <h3>Toledo</h3>
                                         <p>Glass City views</p>
                                     </div>
                                 </div>
@@ -357,12 +425,12 @@
                         <div class="flip-card">
                             <div class="flip-card-inner">
                                 <div class="flip-card-front">
-                                    <img src="{{ asset('images/destination.png') }}" alt="Akron">
+                                    <img src="{{ asset('images/new_york.webp') }}" loading="lazy" alt="Akron">
                                 </div>
                                 <div class="flip-card-back">
-                                    <img src="{{ asset('images/destination2.png') }}" alt="Akron">
+                                    <img src="{{ asset('images/new_york.webp') }}" loading="lazy" alt="Akron">
                                     <div class="flip-card-caption">
-                                        <h4>Akron</h4>
+                                        <h3>Akron</h3>
                                         <p>Rubber capital</p>
                                     </div>
                                 </div>
@@ -372,16 +440,12 @@
 
                 </div>
 
-                <!-- Optional Navigation -->
-                <!-- <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div> -->
-
                 <!-- Optional Pagination -->
                 <div class="swiper-pagination"></div>
 
             </div>
 
-            <a href="#" class="view-btn reveal-item">
+            <a href="#" class="view-btn reveal-item" aria-label="View all Ohio destinations">
                 View all
                 <span>↗</span>
             </a>
@@ -400,38 +464,63 @@
             <h2 class="reveal-item">Our Blogs</h2>
 
             <p class="description reveal-item">
-                Flying to Ohio soon, placed on the midwestern region, there are multiple
-                beautiful places to explore.<br>
-                Know about the different flight options available to choose the best.
+               Whether you are traveling to Ohio, San Francisco, or Paris, 
+               explore the best destinations to travel through our blogs. 
+               Know the various flight options to book the best. 
             </p>
 
-            <div class="blogs-grid reveal-item">
+<div class="blogs-grid reveal-item">
 
-                @forelse($blogs as $blog)
-                    <a href="{{ route('blogdetails', [
-                        'cate_subcate' => $blog->subcategory->slug ?? $blog->category->slug,
-                        'blog_slug' => $blog->slug,
-                    ]) }}"
-                        class="blogs-card">
+    @forelse($blogs as $blog)
 
-                        <div class="blogs-img-wrap">
-                            <img src="{{ asset($blog->image) }}" alt="{{ $blog->alt_tag }}">
-                        </div>
+        @php
+            $categorySlug = $blog->subcategory?->slug ?? $blog->category?->slug;
 
-                        <div class="blog-content">
-                            <h3>{{ $blog->blog_heading }}</h3>
-                            <span class="blog-read-more">Read more <i>↗</i></span>
-                        </div>
+            // Priority 1: blog_url
+            // Priority 2: slug generated from blog_heading
+            $blogSlug = !empty($blog->blog_url)
+                ? $blog->blog_url
+                : \Illuminate\Support\Str::slug($blog->blog_heading);
+        @endphp
 
-                    </a>
-                @empty
-                    <p>No blogs found.</p>
-                @endforelse
+        {{-- Skip blog if category or blog slug is unavailable --}}
+        @continue(empty($categorySlug) || empty($blogSlug))
+
+        <a href="{{ route('blogdetails', [
+            'cate_subcate' => $categorySlug,
+            'blog_slug'    => $blogSlug,
+        ]) }}"
+           class="blogs-card">
+
+            <div class="blogs-img-wrap">
+                <img
+                    src="{{ asset($blog->image) }}"
+                    loading="lazy"
+                    alt="{{ $blog->alt_tag ?? $blog->blog_heading }}"
+                >
             </div>
+
+            <div class="blog-content">
+                <h3>{{ $blog->blog_heading }}</h3>
+
+                <span class="blog-read-more">
+                    Read more <i>↗</i>
+                </span>
+            </div>
+
+        </a>
+
+    @empty
+
+        <p>No blogs found.</p>
+
+    @endforelse
+
+</div>
 
             @if ($blogs->isNotEmpty())
                 <div class="blogs-btn reveal-item">
-                    <a href="{{ route('categoryblogs', ['cate_subcate' => $blogs->first()->category->slug]) }}">
+                    <a href="{{ route('categoryblogs', ['cate_subcate' => $blogs->first()->category->slug]) }}" aria-label="View all blogs">
                         View all
                         <span>↗</span>
                     </a>
@@ -455,11 +544,11 @@
             <h2 class="reveal-item">Our Client Saying!</h2>
 
             <p class="reveal-item">
-                Get best rates on the flights of San Francisco.
-                Know about the places to explore.
+                Unlock the affordable flight rates to travel all over the US.
+                Learn about more places to discover.
             </p>
 
-            <h4 class="reveal-item">Trusted by 400K Customers</h4>
+            <h3 class="reveal-item">Trusted by 400K Customers</h3>
 
             <div class="rating reveal-item">
                 <span class="stars-row">
@@ -473,7 +562,7 @@
             </div>
 
             <div class="arrow reveal-item">
-                <img src="{{ asset('images/Vector 1.png') }}" alt="Curved Arrow">
+                <img src="{{ asset('images/Vector 1.png') }}" loading="lazy" alt="Curved Arrow">
             </div>
 
         </div>
@@ -483,45 +572,46 @@
 
             <!-- Card 1 -->
             <div class="card">
-                <img src="https://randomuser.me/api/portraits/men/11.jpg">
-                <h3>WILLIAM</h3>
+                <img src="https://randomuser.me/api/portraits/men/11.jpg" width="55" height="55" loading="lazy" alt="TESTIMONIAL">
+                <h3>By Nick</h3>
                 <div class="stars">★★★★★</div>
                 <p>
-                    I was impressed by the knowledge and dedication.
-                    They secured a great deal and made our trip seamless.
+                  I was fully impressed by the work of the team. 
+                  They helped me a lot in getting the cheap flights and securing the best flight deals.
                 </p>
             </div>
 
             <!-- Card 2 -->
             <div class="card move-down">
-                <img src="https://randomuser.me/api/portraits/women/12.jpg">
-                <h3>KYLIE</h3>
+                <img src="https://randomuser.me/api/portraits/women/12.jpg" width="55" height="55" loading="lazy" alt="TESTIMONIAL">
+                <h3>By Kylin </h3>
                 <div class="stars">★★★★★</div>
                 <p>
-                    Outstanding service from start to finish.
-                    Travel went above and beyond to find us the best deals.
+                    The pricing of the flight for English Travellers is clear from the start.
+                    There are no surprise fees while checking out. Their service is more than excellent.
                 </p>
             </div>
 
             <!-- Card 3 -->
             <div class="card">
-                <img src="https://randomuser.me/api/portraits/men/31.jpg">
-                <h3>NICK</h3>
+                <img src="https://randomuser.me/api/portraits/men/31.jpg" width="55" height="55" loading="lazy" alt="TESTIMONIAL">
+                <h3>By William</h3>
                 <div class="stars">★★★★★</div>
                 <p>
-                    Efficient, friendly, and expert flight writing.
-                    Travel made our travel stress-free.
+                    This website is totally user-friendly.
+                    It makes my flight experience more efficient and simple. 
+                    Their budget-friendly deals help me to make my whole journey hassle-free.
                 </p>
             </div>
 
             <!-- Card 4 -->
             <div class="card move-down">
-                <img src="https://randomuser.me/api/portraits/women/44.jpg">
-                <h3>JENNY</h3>
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" width="55" height="55" loading="lazy" alt="TESTIMONIAL">
+                <h3>By Jenny</h3>
                 <div class="stars">★★★★★</div>
                 <p>
-                    Fantastic experience with English Traveller.
-                    They were attentive and delivered excellent options.
+                   My experience of booking my flights from English Traveller is mind-blowing. 
+                   The team is understanding, responsive, and delivers excellence in their work.
                 </p>
             </div>
 
@@ -538,65 +628,67 @@
 
             <div class="faq-left">
 
-                <h2>Frequently Asked Questions</h2>
+                <h2>Frequently Asked Questions:</h2>
 
                 <p class="faq-subtitle">
-                    Get best rates on the flights of San Francisco. Know about the places to explore in San Francisco and
-                    the best way to book all your trips.
+                   Get your budget-friendly flights all over the US. 
+                   Know about the different places and the best possible way to book your cheap flights.
                 </p>
 
                 <div class="accordion">
 
                     <div class="accordion-item active">
                         <button class="accordion-header">
-                            What types of tours do you offer?
+                            What kinds of trips can you actually book?
                             <span class="arrow">&#9662;</span>
                         </button>
                         <div class="accordion-body">
-                            We offer a wide range of tours including cultural, adventure, luxury and customized
-                            itineraries. Popular destinations include Canada, the U.S. and the UK.
+                           Anything from a single one-way ticket to a full multi-city loop across three countries.
+                           We work the same 500+ airlines whether it's a quick weekend hop or a longer international trip,
+                           and if splitting your route into two separate tickets would save you money, the agent will say so 
+                           upfront instead of just selling you the round trip.
                         </div>
                     </div>
 
                     <div class="accordion-item">
                         <button class="accordion-header">
-                            What is included in the tour package?
+                            What's included in the fare I see?
                             <span class="arrow">&#9662;</span>
                         </button>
                         <div class="accordion-body">
-                            Most packages include accommodation, sightseeing, transportation and selected meals depending
-                            on your destination.
+                       The price shown includes base fare and taxes. Optional extras like checked 
+                       bags or seat selection are shown separately before you pay.
                         </div>
                     </div>
 
                     <div class="accordion-item">
                         <button class="accordion-header">
-                            Can I customize my itinerary?
+                            Can I change my dates after booking?
                             <span class="arrow">&#9662;</span>
                         </button>
                         <div class="accordion-body">
-                            Yes. Our travel experts can fully customize your itinerary according to your budget and
-                            travel preferences.
+                            It depends on the airline's fare rules, which we show you before you book.
+                            Call our agents any time to check change or refund options.
                         </div>
                     </div>
 
                     <div class="accordion-item">
                         <button class="accordion-header">
-                            Do you offer group discounts?
+                           Do you offer group or family discounts?
                             <span class="arrow">&#9662;</span>
                         </button>
                         <div class="accordion-body">
-                            Yes, we offer attractive discounts for families, corporate groups and large bookings.
+                            Yes — ask an agent about rates for group and family bookings when you call.
                         </div>
                     </div>
 
                     <div class="accordion-item">
                         <button class="accordion-header">
-                            How do I book a tour?
+                            How do I book?
                             <span class="arrow">&#9662;</span>
                         </button>
                         <div class="accordion-body">
-                            You can book online through our website or contact our customer support team for assistance.
+                           Search online and book directly, or call +1-844-426-3868 to book with an agent over the phone.
                         </div>
                     </div>
 
@@ -604,7 +696,7 @@
             </div>
 
             <div class="faq-right">
-                <img src="{{ asset('images/Group 1597884705.png') }}" alt="FAQ Image">
+                <img src="{{ asset('images/Group 1597884705.png') }}" loading="lazy" alt="FAQ Image">
             </div>
 
         </div>
@@ -616,49 +708,77 @@
     <section class="disclaimer-section">
         <div class="disclaimer-container">
             <p>
-                <strong>Disclaimer:</strong> englishtraveller.us is an independent platform developed to help users
-                find flight tickets at cheap and affordable prices on all major airlines.
-                We aim to provide users with a way to save money on international flight
-                tickets. EnglishTraveller is not liable for any loss or damage, including,
-                without limitation, indirect loss or damage or any loss of data or profits
-                arising from, or in connection with, the use of this website. Through this
-                website, you can link to other websites not under the control of
-                EnglishTraveller. The nature, content, and availability of those sites are
-                beyond our control. For any queries, call us at
-                <a href="tel:+18444263688">+1-844-426-3868</a>, and you will get the best
-                assistance available.
+                <strong>Disclaimer:</strong> englishtraveller.us is an independent platform that helps the user 
+                to get budget-friendly ticket prices on all the main airlines. We aim to save the money of our 
+                users on their international flight tickets. Also, we are not responsible for any losses or damage,
+                including, without limitation, indirect loss or damage due to data or profits arising from, or in 
+                connection with the use of our website. With the help of our website, you can link to other websites that are not under the 
+                control of the English Traveller. The nature, content, and the availability of those sites are beyond our control. For any queries, call us at 
+                <a href="tel:+18444263868">+1-844-426-3868</a>, and you will get the best assistance available.
             </p>
         </div>
     </section>
-
 
     {{-- =============================================================
      CSS
 ============================================================== --}}
     <style>
         /* ================================================
-                       BOOKING SECTION — FULL CONSOLIDATED CSS
-                    ================================================= */
+           BOOKING SECTION — LCP-OPTIMISED
+        ================================================= */
 
-        /* --- Section wrapper + background zoom --- */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
         .booking-section {
-            background: url("../images/Group 1.png") center/cover no-repeat;
+            position: relative;
             display: flex;
             align-items: center;
             padding: 80px 8%;
-            background-size: 105% auto;
-            animation: bgZoom 12s ease-in-out infinite alternate;
             overflow: hidden;
+            z-index: 1;
+            min-height: 650px;
+        }
+
+        /* LCP FIX #3: no animation until the page has loaded (body.loaded is added by JS),
+           and the animation uses transform (compositor-only) instead of background-size */
+        .booking-hero {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            z-index: -2;
+            transform-origin: center;
+        }
+
+        body.loaded .booking-hero {
+            will-change: transform;
+            animation: bgZoom 12s ease-in-out infinite alternate;
         }
 
         @keyframes bgZoom {
-            from {
-                background-size: 100% auto;
-            }
+            from { transform: scale(1); }
+            to   { transform: scale(1.08); }
+        }
 
-            to {
-                background-size: 110% auto;
-            }
+        /* Overlay */
+        .booking-section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: #a5663d73;
+            z-index: -1;
         }
 
         .booking-content {
@@ -669,66 +789,47 @@
             gap: 217px;
         }
 
-        /* --- Text column --- */
+        /* --- Text column ---
+           LCP FIX #4: NO opacity:0 on the hero text. Chrome ignores elements at opacity 0
+           for LCP, so the headline is now visible from first paint; only transform animates. */
         .booking-text {
             color: #fff;
             max-width: 450px;
-            animation: fadeInLeft 1s ease forwards;
-            opacity: 0;
+            animation: slideInLeft 0.8s ease both;
         }
 
-        .booking-text h2 {
-            font-size: 62px;
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 15px;
-            animation: fadeInUp 0.9s ease forwards;
-            animation-delay: 0.3s;
-            opacity: 0;
-        }
+     .booking-text h1 {
+    font-size: 62px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 15px;
+
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    animation: none;
+    transition: none;
+}
 
         .booking-text p {
             line-height: 1.7;
             font-size: 18px;
-            animation: fadeInUp 0.9s ease forwards;
-            animation-delay: 0.5s;
-            opacity: 0;
         }
 
-        @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-40px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        @keyframes slideInLeft {
+            from { transform: translateX(-40px); }
+            to   { transform: translateX(0); }
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* --- Booking form container --- */
+        /* --- Booking form container (transform-only entrance, always visible) --- */
         .booking-form {
             width: 613px;
             background: rgb(255 255 255 / 56%);
             padding: 25px;
             border-radius: 12px;
             height: 500px;
-            animation: fadeInRight 1s ease forwards;
-            animation-delay: 0.2s;
-            opacity: 0;
+            animation: slideInRight 0.8s ease 0.1s both;
             transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
 
@@ -737,16 +838,9 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
-        @keyframes fadeInRight {
-            from {
-                opacity: 0;
-                transform: translateX(40px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        @keyframes slideInRight {
+            from { transform: translateX(40px); }
+            to   { transform: translateX(0); }
         }
 
         /* --- Trip type toggle --- */
@@ -798,17 +892,9 @@
         }
 
         @keyframes pillPop {
-            0% {
-                transform: scale(0.9);
-            }
-
-            60% {
-                transform: scale(1.05);
-            }
-
-            100% {
-                transform: scale(1);
-            }
+            0%   { transform: scale(0.9); }
+            60%  { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         /* --- Generic input-box wrapper (select + date fields) --- */
@@ -820,21 +906,10 @@
             animation: fieldRise 0.6s ease forwards;
         }
 
-        .booking-form .input-box:nth-of-type(1) {
-            animation-delay: 0.5s;
-        }
-
-        .booking-form .input-box:nth-of-type(2) {
-            animation-delay: 0.65s;
-        }
-
-        .booking-form .input-box:nth-of-type(3) {
-            animation-delay: 0.8s;
-        }
-
-        .booking-form .date-group {
-            animation-delay: 0.95s;
-        }
+        .booking-form .input-box:nth-of-type(1) { animation-delay: 0.3s; }
+        .booking-form .input-box:nth-of-type(2) { animation-delay: 0.4s; }
+        .booking-form .input-box:nth-of-type(3) { animation-delay: 0.5s; }
+        .booking-form .date-group { animation-delay: 0.6s; }
 
         @keyframes fieldRise {
             to {
@@ -909,6 +984,7 @@
             top: 30%;
             transform: translateY(-50%);
             width: 25px;
+            height: auto;
             cursor: pointer;
             z-index: 2;
             transition: transform 0.3s ease, filter 0.3s ease;
@@ -926,32 +1002,16 @@
         }
 
         @keyframes shakeField {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            20% {
-                transform: translateX(-6px);
-            }
-
-            40% {
-                transform: translateX(6px);
-            }
-
-            60% {
-                transform: translateX(-4px);
-            }
-
-            80% {
-                transform: translateX(4px);
-            }
+            0%, 100% { transform: translateX(0); }
+            20%      { transform: translateX(-6px); }
+            40%      { transform: translateX(6px); }
+            60%      { transform: translateX(-4px); }
+            80%      { transform: translateX(4px); }
         }
 
         /* ================================================
-                       FLOATING LETTER-LABEL INPUTS (city / destination)
-                    ================================================= */
+           FLOATING LETTER-LABEL INPUTS (city / destination)
+        ================================================= */
         .form-field {
             position: relative;
         }
@@ -1025,7 +1085,7 @@
             opacity: 0;
             transform: translateY(15px);
             animation: fieldRise 0.6s ease forwards;
-            animation-delay: 1.1s;
+            animation-delay: 0.7s;
             transition: background 0.3s ease, transform 0.15s ease, box-shadow 0.3s ease;
         }
 
@@ -1058,6 +1118,8 @@
         .booking-form button img {
             width: 25px;
             height: 25px;
+            object-fit: contain;
+            flex-shrink: 0;
             transition: transform 0.3s ease;
         }
 
@@ -1083,39 +1145,24 @@
         }
 
         /* ================================================
-                       RESPONSIVE — LARGE DESKTOP / LAPTOP
-                    ================================================= */
+           RESPONSIVE — LARGE DESKTOP / LAPTOP
+        ================================================= */
         @media (max-width: 1400px) {
-            .booking-content {
-                gap: 120px;
-            }
+            .booking-content { gap: 120px; }
         }
 
         @media (max-width: 1200px) {
-            .booking-content {
-                gap: 70px;
-            }
-
-            .booking-text h2 {
-                font-size: 54px;
-            }
-
-            .booking-form {
-                width: 550px;
-            }
+            .booking-content { gap: 70px; }
+            .booking-text h1 { font-size: 54px; }
+            .booking-form { width: 550px; }
         }
 
         /* ================================================
-                       RESPONSIVE — TABLET
-                    ================================================= */
+           RESPONSIVE — TABLET
+        ================================================= */
         @media (max-width: 1024px) {
-            .booking-content {
-                gap: 40px;
-            }
-
-            .booking-text h2 {
-                font-size: 46px;
-            }
+            .booking-content { gap: 40px; }
+            .booking-text h1 { font-size: 46px; }
 
             .booking-form {
                 width: 480px;
@@ -1135,29 +1182,27 @@
                 gap: 40px;
             }
 
-            .booking-text {
-                max-width: 100%;
-            }
+            .booking-text { max-width: 100%; }
 
             .booking-form {
                 width: 100%;
                 max-width: 550px;
             }
 
-            .trip-type {
-                margin: 0 auto 20px;
-            }
+            .trip-type { margin: 0 auto 20px; }
         }
 
         /* ================================================
-                       RESPONSIVE — MOBILE (LANDSCAPE / SMALL TABLET)
-                    ================================================= */
+           RESPONSIVE — MOBILE (LANDSCAPE / SMALL TABLET)
+        ================================================= */
         @media (max-width: 768px) {
 
-            .booking-section {
-                padding: 50px 20px;
+            .booking-section { padding: 50px 20px; }
+
+            /* No hero zoom on mobile (selector matches the specificity of the rule above) */
+            body.loaded .booking-hero {
                 animation: none;
-                background-size: cover;
+                will-change: auto;
             }
 
             .booking-content {
@@ -1166,11 +1211,9 @@
                 gap: 30px;
             }
 
-            .booking-text {
-                max-width: 100%;
-            }
+            .booking-text { max-width: 100%; }
 
-            .booking-text h2 {
+            .booking-text h1 {
                 font-size: 36px;
                 line-height: 1.3;
             }
@@ -1207,13 +1250,9 @@
                 padding: 0 40px 0 12px;
             }
 
-            .floating-input {
-                padding: 0 40px 0 5px !important;
-            }
+            .floating-input { padding: 0 40px 0 5px !important; }
 
-            .floating-label span {
-                font-size: 14px;
-            }
+            .floating-label span { font-size: 14px; }
 
             .floating-input:focus+.floating-label span,
             .floating-input:valid+.floating-label span {
@@ -1226,9 +1265,7 @@
                 gap: 20px;
             }
 
-            .date-group input {
-                width: 100%;
-            }
+            .date-group input { width: 100%; }
 
             .booking-form button {
                 height: 50px;
@@ -1236,53 +1273,30 @@
                 margin-top: 20px;
             }
 
-            /* Tighter stagger delays so form finishes revealing faster on mobile */
-            .booking-form .input-box:nth-of-type(1) {
-                animation-delay: 0.35s;
-            }
-
-            .booking-form .input-box:nth-of-type(2) {
-                animation-delay: 0.45s;
-            }
-
-            .booking-form .input-box:nth-of-type(3) {
-                animation-delay: 0.55s;
-            }
-
-            .booking-form .date-group {
-                animation-delay: 0.65s;
-            }
-
-            .booking-form button {
-                animation-delay: 0.75s;
-            }
+            /* Tighter stagger so the form finishes revealing faster on mobile */
+            .booking-form .input-box:nth-of-type(1) { animation-delay: 0.15s; }
+            .booking-form .input-box:nth-of-type(2) { animation-delay: 0.25s; }
+            .booking-form .input-box:nth-of-type(3) { animation-delay: 0.35s; }
+            .booking-form .date-group { animation-delay: 0.45s; }
+            .booking-form button { animation-delay: 0.55s; }
         }
 
         /* ================================================
-                       RESPONSIVE — SMALL MOBILE
-                    ================================================= */
+           RESPONSIVE — SMALL MOBILE
+        ================================================= */
         @media (max-width: 480px) {
 
-            .booking-section {
-                padding: 40px 15px;
-            }
+            .booking-section { padding: 40px 15px; }
 
-            .booking-text h2 {
-                font-size: 28px;
-            }
-
-            .booking-text p {
-                font-size: 14px;
-            }
+            .booking-text h1 { font-size: 28px; }
+            .booking-text p { font-size: 14px; }
 
             .trip-type label {
                 font-size: 14px;
                 padding: 7px 12px;
             }
 
-            .booking-form {
-                padding: 15px;
-            }
+            .booking-form { padding: 15px; }
 
             .booking-form input,
             .booking-form select {
@@ -1290,9 +1304,7 @@
                 height: 42px;
             }
 
-            .floating-label span {
-                font-size: 13px;
-            }
+            .floating-label span { font-size: 13px; }
 
             .floating-input:focus+.floating-label span,
             .floating-input:valid+.floating-label span {
@@ -1305,20 +1317,21 @@
                 height: 46px;
             }
 
-            .booking-form button img,
+            .booking-form button img {
+                width: 20px;
+                height: 20px;
+            }
+
             .input-box img {
                 width: 20px;
+                height: auto;
             }
         }
 
         @media (max-width: 360px) {
-            .booking-text h2 {
-                font-size: 24px;
-            }
+            .booking-text h1 { font-size: 24px; }
 
-            .trip-type {
-                gap: 2px;
-            }
+            .trip-type { gap: 2px; }
 
             .trip-type label {
                 font-size: 12px;
@@ -1327,13 +1340,14 @@
         }
 
         /* ================================================
-                       ACCESSIBILITY — REDUCED MOTION
-                    ================================================= */
+           ACCESSIBILITY — REDUCED MOTION
+        ================================================= */
         @media (prefers-reduced-motion: reduce) {
 
+            body.loaded .booking-hero,
             .booking-section,
             .booking-text,
-            .booking-text h2,
+            .booking-text h1,
             .booking-text p,
             .booking-form,
             .booking-form .input-box,
@@ -1348,8 +1362,8 @@
         }
 
         /* ================================
-                               ABOUT SECTION
-                    ================================= */
+           ABOUT SECTION
+        ================================= */
         .about {
             padding: 47px 0;
             position: relative;
@@ -1401,15 +1415,8 @@
         }
 
         @keyframes blobFloat {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-14px);
-            }
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-14px); }
         }
 
         /* --- Circle accent images --- */
@@ -1472,39 +1479,18 @@
         }
 
         @keyframes circleFloat1 {
-
-            0%,
-            100% {
-                transform: scale(1) translateY(0);
-            }
-
-            50% {
-                transform: scale(1) translateY(-12px);
-            }
+            0%, 100% { transform: scale(1) translateY(0); }
+            50%      { transform: scale(1) translateY(-12px); }
         }
 
         @keyframes circleFloat2 {
-
-            0%,
-            100% {
-                transform: scale(1) translateY(0);
-            }
-
-            50% {
-                transform: scale(1) translateY(10px);
-            }
+            0%, 100% { transform: scale(1) translateY(0); }
+            50%      { transform: scale(1) translateY(10px); }
         }
 
         @keyframes circleFloat3 {
-
-            0%,
-            100% {
-                transform: scale(1) translateX(0);
-            }
-
-            50% {
-                transform: scale(1) translateX(-8px);
-            }
+            0%, 100% { transform: scale(1) translateX(0); }
+            50%      { transform: scale(1) translateX(-8px); }
         }
 
         /* --- RIGHT: text content --- */
@@ -1513,7 +1499,7 @@
         }
 
         .about-subtitle {
-            color: #c07a42;
+            color: #9c5a2c;
             font-size: 18px;
             font-weight: 600;
         }
@@ -1558,21 +1544,10 @@
             transition: opacity 0.7s ease, transform 0.7s ease;
         }
 
-        .about.in-view .reveal-item:nth-of-type(1) {
-            transition-delay: 0.1s;
-        }
-
-        .about.in-view .reveal-item:nth-of-type(2) {
-            transition-delay: 0.25s;
-        }
-
-        .about.in-view .reveal-item:nth-of-type(3) {
-            transition-delay: 0.4s;
-        }
-
-        .about.in-view .reveal-item:nth-of-type(4) {
-            transition-delay: 0.55s;
-        }
+        .about.in-view .reveal-item:nth-of-type(1) { transition-delay: 0.1s; }
+        .about.in-view .reveal-item:nth-of-type(2) { transition-delay: 0.25s; }
+        .about.in-view .reveal-item:nth-of-type(3) { transition-delay: 0.4s; }
+        .about.in-view .reveal-item:nth-of-type(4) { transition-delay: 0.55s; }
 
         .about.in-view .reveal-item {
             opacity: 1;
@@ -1646,54 +1621,24 @@
         }
 
         @keyframes dotsRotate {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
         }
 
-        /* ================================================
-                   RESPONSIVE — TABLET
-                ================================================= */
+        /* RESPONSIVE — TABLET */
         @media (max-width: 1024px) {
-            .about-container {
-                gap: 40px;
-            }
+            .about-container { gap: 40px; }
+            .about-contents h2 { font-size: 32px; }
 
-            .about-contents h2 {
-                font-size: 32px;
-            }
-
-            .circle1 {
-                width: 140px;
-                height: 140px;
-                left: -40px;
-            }
-
-            .circle2 {
-                width: 130px;
-                height: 130px;
-                left: 20px;
-            }
-
-            .circle3 {
-                width: 120px;
-                height: 120px;
-                right: -20px;
-            }
+            .circle1 { width: 140px; height: 140px; left: -40px; }
+            .circle2 { width: 130px; height: 130px; left: 20px; }
+            .circle3 { width: 120px; height: 120px; right: -20px; }
         }
 
-        /* ================================================
-                   RESPONSIVE — MOBILE
-                ================================================= */
+        /* RESPONSIVE — MOBILE */
         @media (max-width: 768px) {
 
-            .about {
-                padding: 50px 20px;
-            }
+            .about { padding: 50px 20px; }
 
             .about-container {
                 flex-direction: column;
@@ -1702,9 +1647,7 @@
             }
 
             .about-image,
-            .about-contents {
-                width: 100%;
-            }
+            .about-contents { width: 100%; }
 
             .about-image {
                 min-height: auto;
@@ -1714,9 +1657,7 @@
                 transform: translateY(-30px);
             }
 
-            .about.in-view .about-image {
-                transform: translateY(0);
-            }
+            .about.in-view .about-image { transform: translateY(0); }
 
             .blob {
                 width: 320px;
@@ -1725,9 +1666,7 @@
             }
 
             /* Hide decorative circles on mobile to avoid clutter/overflow */
-            .circle {
-                display: none;
-            }
+            .circle { display: none; }
 
             .about-contents h2 {
                 font-size: 30px;
@@ -1745,40 +1684,23 @@
                 margin-bottom: 25px;
             }
 
-            .about-subtitle {
-                font-size: 16px;
-            }
+            .about-subtitle { font-size: 16px; }
 
             .btn {
                 padding: 14px 28px;
                 font-size: 18px;
             }
 
-            .dots {
-                display: none;
-            }
+            .dots { display: none; }
 
-            .about.in-view .reveal-item:nth-of-type(1) {
-                transition-delay: 0.05s;
-            }
-
-            .about.in-view .reveal-item:nth-of-type(2) {
-                transition-delay: 0.15s;
-            }
-
-            .about.in-view .reveal-item:nth-of-type(3) {
-                transition-delay: 0.25s;
-            }
-
-            .about.in-view .reveal-item:nth-of-type(4) {
-                transition-delay: 0.35s;
-            }
+            .about.in-view .reveal-item:nth-of-type(1) { transition-delay: 0.05s; }
+            .about.in-view .reveal-item:nth-of-type(2) { transition-delay: 0.15s; }
+            .about.in-view .reveal-item:nth-of-type(3) { transition-delay: 0.25s; }
+            .about.in-view .reveal-item:nth-of-type(4) { transition-delay: 0.35s; }
         }
 
         @media (max-width: 480px) {
-            .about-contents h2 {
-                font-size: 26px;
-            }
+            .about-contents h2 { font-size: 26px; }
 
             .about-contents p {
                 font-size: 14px;
@@ -1796,9 +1718,8 @@
             }
         }
 
-        /* ================================================
-                   ACCESSIBILITY — REDUCED MOTION
-                ================================================= */
+        /* ACCESSIBILITY — REDUCED MOTION
+           (fixed: the old rule forced width:70px on every element in this list) */
         @media (prefers-reduced-motion: reduce) {
 
             .about-image,
@@ -1814,18 +1735,17 @@
                 animation: none !important;
                 opacity: 1 !important;
                 transform: none !important;
+            }
+
+            .about-contents h2::after {
                 width: 70px !important;
             }
         }
 
 
         /* ================================
-                               STACKING SCROLL CARDS SECTION
-                               (DESKTOP)
-                            ================================= */
-        /* ================================
-               STACKING SCROLL CARDS SECTION
-            ================================= */
+           STACKING SCROLL CARDS SECTION
+        ================================= */
         .stack-section {
             position: relative;
         }
@@ -1896,7 +1816,7 @@
             transform: translateX(0);
         }
 
-        /* --- Number: pop-in with count-style emphasis --- */
+        /* --- Number: pop-in --- */
         .number {
             font-size: 70px;
             font-weight: 700;
@@ -2008,88 +1928,35 @@
             transform: translate(3px, -3px);
         }
 
-        /* ================================
-               CARD COLORS
-            ================================= */
-        .card1 {
-            background: #FFF2DA;
-            z-index: 1;
-        }
+        /* --- CARD COLORS --- */
+        .card1 { background: #FFF2DA; z-index: 1; }
+        .card1 .number { color: #2E3A2E; }
+        .card1 .sub-title { color: #8f5a1f; }
+        .card1 h2, .card1 p { color: #2E3A2E; }
 
-        .card1 .number {
-            color: #2E3A2E;
-        }
+        .card2 { background: #4A3425; z-index: 2; }
+        .card2 .number { color: #FFD58C; }
+        .card2 .sub-title { color: #F7C76D; }
+        .card2 h2, .card2 p { color: #FFFFFF; }
 
-        .card1 .sub-title {
-            color: #D0893D;
-        }
+        .card3 { background: #2E3A2E; z-index: 3; }
+        .card3 .number { color: #FFD44F; }
+        .card3 .sub-title { color: #FFE083; }
+        .card3 h2, .card3 p { color: #FFFFFF; }
 
-        .card1 h2,
-        .card1 p {
-            color: #2E3A2E;
-        }
-
-        .card2 {
-            background: #4A3425;
-            z-index: 2;
-        }
-
-        .card2 .number {
-            color: #FFD58C;
-        }
-
-        .card2 .sub-title {
-            color: #F7C76D;
-        }
-
-        .card2 h2,
-        .card2 p {
-            color: #FFFFFF;
-        }
-
-        .card3 {
-            background: #2E3A2E;
-            z-index: 3;
-        }
-
-        .card3 .number {
-            color: #FFD44F;
-        }
-
-        .card3 .sub-title {
-            color: #FFE083;
-        }
-
-        .card3 h2,
-        .card3 p {
-            color: #FFFFFF;
-        }
-
-        /* ================================================
-               DESKTOP — sticky stacking swiper disabled
-            ================================================= */
+        /* DESKTOP — swiper disabled, sticky stacking active */
         @media (min-width: 992px) {
 
-            .mobileSwiper {
-                overflow: visible;
-            }
+            .mobileSwiper { overflow: visible; }
 
-            .mobileSwiper .swiper-wrapper {
-                display: block;
-            }
+            .mobileSwiper .swiper-wrapper { display: block; }
 
-            .mobileSwiper .swiper-slide {
-                width: 100%;
-            }
+            .mobileSwiper .swiper-slide { width: 100%; }
 
-            .swiper-pagination {
-                display: none;
-            }
+            .swiper-pagination { display: none; }
         }
 
-        /* ================================================
-               TABLET
-            ================================================= */
+        /* TABLET */
         @media (max-width: 1200px) {
             .stack-container {
                 width: 100%;
@@ -2098,35 +1965,18 @@
         }
 
         @media (max-width: 1024px) {
-            .international-container {
-                gap: 40px;
-            }
-
-            .stack-content h2 {
-                font-size: 32px;
-            }
-
-            .number {
-                font-size: 56px;
-            }
-
-            .image-box img {
-                height: 420px;
-            }
+            .international-container { gap: 40px; }
+            .stack-content h2 { font-size: 32px; }
+            .number { font-size: 56px; }
+            .image-box img { height: 420px; }
         }
 
-        /* ================================================
-               MOBILE
-            ================================================= */
+        /* MOBILE */
         @media (max-width: 991px) {
 
-            .mobileSwiper {
-                overflow: hidden;
-            }
+            .mobileSwiper { overflow: hidden; }
 
-            .mobileSwiper .swiper-wrapper {
-                display: flex;
-            }
+            .mobileSwiper .swiper-wrapper { display: flex; }
 
             .stack-card {
                 position: relative;
@@ -2136,9 +1986,7 @@
                 padding: 35px 20px;
             }
 
-            .stack-container {
-                padding: 0;
-            }
+            .stack-container { padding: 0; }
 
             .international-container {
                 flex-direction: column;
@@ -2162,13 +2010,9 @@
                 height: 320px;
             }
 
-            .number {
-                font-size: 45px;
-            }
+            .number { font-size: 45px; }
 
-            .stack-content h2 {
-                font-size: 28px;
-            }
+            .stack-content h2 { font-size: 28px; }
 
             .stack-content p {
                 font-size: 16px;
@@ -2181,50 +2025,24 @@
                 margin-top: 20px;
             }
 
-            .swiper-pagination-bullet-active {
-                background: #9c6037;
-            }
+            .swiper-pagination-bullet-active { background: #9c6037; }
 
             /* Tighter stagger on mobile since cards are swiped individually */
-            .stack-content h2 {
-                transition-delay: 0.3s;
-            }
-
-            .stack-content p {
-                transition-delay: 0.4s;
-            }
-
-            .number {
-                transition-delay: 0.2s;
-            }
-
-            .sub-title {
-                transition-delay: 0.25s;
-            }
-
-            .btn {
-                transition-delay: 0.5s;
-            }
+            .stack-content h2 { transition-delay: 0.3s; }
+            .stack-content p { transition-delay: 0.4s; }
+            .number { transition-delay: 0.2s; }
+            .sub-title { transition-delay: 0.25s; }
+            .btn { transition-delay: 0.5s; }
         }
 
         @media (max-width: 600px) {
-            .image-box img {
-                height: 260px;
-            }
+            .image-box img { height: 260px; }
         }
 
         @media (max-width: 480px) {
-            .image-box img {
-                height: 220px;
-            }
-
-            .number {
-                font-size: 36px;
-            }
-
-            .stack-content h2 {
-                font-size: 24px;
-            }
+            .image-box img { height: 220px; }
+            .number { font-size: 36px; }
+            .stack-content h2 { font-size: 24px; }
 
             .stack-content p {
                 font-size: 14px;
@@ -2237,9 +2055,7 @@
             }
         }
 
-        /* ================================================
-               ACCESSIBILITY — REDUCED MOTION
-            ================================================= */
+        /* ACCESSIBILITY — REDUCED MOTION */
         @media (prefers-reduced-motion: reduce) {
 
             .image-box,
@@ -2255,10 +2071,6 @@
             }
         }
 
-
-        /* ================================
-                               DESTINATION SLIDER
-                            ================================= */
         /* ================================
            DESTINATION SECTION
         ================================= */
@@ -2283,7 +2095,7 @@
         }
 
         .destination h2 {
-            color: #fff;
+            color: #2E3A2E;
             font-size: 38px;
             font-weight: 700;
             margin-bottom: 12px;
@@ -2292,7 +2104,7 @@
         .description {
             max-width: 700px;
             margin: auto;
-            color: #fff;
+            color: #2E3A2E;
             font-size: 15px;
             line-height: 1.7;
             margin-bottom: 50px;
@@ -2314,6 +2126,24 @@
             color: #fff;
         }
 
+        /* Touch targets: 14px bullets with 5px side margins = 24px centre-to-centre spacing */
+        .swiper-pagination-bullet {
+            width: 14px;
+            height: 14px;
+            margin: 0 5px !important;
+        }
+
+        /* Bullets on the tan destination background (white would be invisible) */
+        .destination .swiper-pagination-bullet {
+            background: #2E3A2E;
+            opacity: 0.45;
+        }
+
+        .destination .swiper-pagination-bullet-active {
+            background: #2E3A2E;
+            opacity: 1;
+        }
+
         /* --- Scroll-triggered staggered reveal --- */
         .reveal-item {
             opacity: 0;
@@ -2321,34 +2151,18 @@
             transition: opacity 0.7s ease, transform 0.7s ease;
         }
 
-        .destination.in-view .reveal-item:nth-of-type(1) {
-            transition-delay: 0.1s;
-        }
-
-        .destination.in-view .reveal-item:nth-of-type(2) {
-            transition-delay: 0.25s;
-        }
-
-        .destination.in-view .reveal-item:nth-of-type(3) {
-            transition-delay: 0.4s;
-        }
-
-        .destination.in-view .reveal-item:nth-of-type(4) {
-            transition-delay: 0.55s;
-        }
-
-        .destination.in-view .reveal-item:nth-of-type(5) {
-            transition-delay: 0.7s;
-        }
+        .destination.in-view .reveal-item:nth-of-type(1) { transition-delay: 0.1s; }
+        .destination.in-view .reveal-item:nth-of-type(2) { transition-delay: 0.25s; }
+        .destination.in-view .reveal-item:nth-of-type(3) { transition-delay: 0.4s; }
+        .destination.in-view .reveal-item:nth-of-type(4) { transition-delay: 0.55s; }
+        .destination.in-view .reveal-item:nth-of-type(5) { transition-delay: 0.7s; }
 
         .destination.in-view .reveal-item {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* ================================
-           FLIP CARDS
-        ================================= */
+        /* --- FLIP CARDS --- */
         .flip-card {
             width: 320px;
             height: 420px;
@@ -2420,7 +2234,7 @@
             transform: translateY(0);
         }
 
-        .flip-card-caption h4 {
+        .flip-card-caption h3 {
             font-size: 22px;
             font-weight: 700;
             margin-bottom: 4px;
@@ -2441,9 +2255,7 @@
             transform: translateY(0);
         }
 
-        /* ================================
-           VIEW ALL BUTTON
-        ================================= */
+        /* --- VIEW ALL BUTTON --- */
         .view-btn {
             margin-top: 50px;
             display: inline-flex;
@@ -2497,32 +2309,20 @@
             transform: translate(3px, -3px);
         }
 
-        /* ================================================
-           RESPONSIVE — TABLET
-        ================================================= */
         @media (max-width: 1024px) {
             .flip-card {
                 width: 280px;
                 height: 380px;
             }
 
-            .destination h2 {
-                font-size: 32px;
-            }
+            .destination h2 { font-size: 32px; }
         }
 
-        /* ================================================
-           RESPONSIVE — MOBILE
-        ================================================= */
         @media (max-width: 768px) {
 
-            .destination {
-                padding: 40px 0;
-            }
+            .destination { padding: 40px 0; }
 
-            .destination h2 {
-                font-size: 28px;
-            }
+            .destination h2 { font-size: 28px; }
 
             .description {
                 font-size: 14px;
@@ -2535,13 +2335,8 @@
                 height: 380px;
             }
 
-            .flip-card-caption h4 {
-                font-size: 18px;
-            }
-
-            .flip-card-caption p {
-                font-size: 13px;
-            }
+            .flip-card-caption h3 { font-size: 18px; }
+            .flip-card-caption p { font-size: 13px; }
 
             .view-btn {
                 margin-top: 35px;
@@ -2552,26 +2347,15 @@
 
         @media (max-width: 480px) {
 
-            .flip-card {
-                height: 340px;
-            }
+            .flip-card { height: 340px; }
 
-            .flip-card-caption {
-                padding: 15px;
-            }
+            .flip-card-caption { padding: 15px; }
 
-            .sub-title {
-                font-size: 16px;
-            }
+            .sub-title { font-size: 16px; }
 
-            .destination h2 {
-                font-size: 24px;
-            }
+            .destination h2 { font-size: 24px; }
         }
 
-        /* ================================================
-           ACCESSIBILITY — REDUCED MOTION
-        ================================================= */
         @media (prefers-reduced-motion: reduce) {
 
             .reveal-item,
@@ -2586,13 +2370,10 @@
 
 
         /* ================================
-                               BLOGS SECTION
-                            ================================= */
-        /* ================================
-       BLOGS SECTION
-    ================================= */
+           BLOGS SECTION
+        ================================= */
         .blogs-section {
-            background: #a87635;
+            background: #8f5f27;
             padding: 30px 0;
             margin-top: 44px;
             overflow: hidden;
@@ -2639,53 +2420,30 @@
         }
 
         .blogs-section .description {
-            color: #f4f4f4;
+            color: #fff;
             font-size: 15px;
             line-height: 1.7;
             max-width: 700px;
             margin: 0 auto 50px;
         }
 
-        /* --- Scroll-triggered staggered reveal (top-level items) --- */
-        .reveal-item {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.7s ease, transform 0.7s ease;
-        }
-
-        .blogs-section.in-view .reveal-item:nth-of-type(1) {
-            transition-delay: 0.1s;
-        }
-
-        .blogs-section.in-view .reveal-item:nth-of-type(2) {
-            transition-delay: 0.25s;
-        }
-
-        .blogs-section.in-view .reveal-item:nth-of-type(3) {
-            transition-delay: 0.4s;
-        }
-
-        .blogs-section.in-view .reveal-item:nth-of-type(4) {
-            transition-delay: 0.55s;
-        }
-
-        .blogs-section.in-view .reveal-item:nth-of-type(5) {
-            transition-delay: 0.7s;
-        }
+        .blogs-section.in-view .reveal-item:nth-of-type(1) { transition-delay: 0.1s; }
+        .blogs-section.in-view .reveal-item:nth-of-type(2) { transition-delay: 0.25s; }
+        .blogs-section.in-view .reveal-item:nth-of-type(3) { transition-delay: 0.4s; }
+        .blogs-section.in-view .reveal-item:nth-of-type(4) { transition-delay: 0.55s; }
+        .blogs-section.in-view .reveal-item:nth-of-type(5) { transition-delay: 0.7s; }
 
         .blogs-section.in-view .reveal-item {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* --- Blogs grid --- */
         .blogs-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 28px;
         }
 
-        /* --- Individual card entrance (staggered independently, JS-driven delay) --- */
         .blogs-card {
             border-radius: 14px;
             overflow: hidden;
@@ -2730,7 +2488,7 @@
 
         .blogs-card img {
             width: 100%;
-            height: 250px;
+            height: 215px;
             object-fit: cover;
             display: block;
             transition: transform 0.6s ease;
@@ -2753,7 +2511,7 @@
         }
 
         .blogs-card:hover .blog-content h3 {
-            color: #a87635;
+            color: #8f5f27;
         }
 
         .blog-read-more {
@@ -2763,10 +2521,13 @@
             margin-top: 10px;
             font-size: 13px;
             font-weight: 600;
-            color: #a87635;
-            opacity: 0;
+            color: #8f5f27;
+            /*opacity: 0;*/
             transform: translateX(-8px);
             transition: opacity 0.3s ease, transform 0.3s ease;
+            border: 1px solid #8f5f27;
+            border-radius: 20px;
+            padding: 4px;
         }
 
         .blogs-card:hover .blog-read-more {
@@ -2783,7 +2544,6 @@
             transform: translate(3px, -3px);
         }
 
-        /* --- View all button --- */
         .blogs-btn {
             margin-top: 50px;
         }
@@ -2833,27 +2593,15 @@
             transform: translate(3px, -3px);
         }
 
-        /* ================================================
-       RESPONSIVE — TABLET
-    ================================================= */
         @media (max-width: 991px) {
 
-            .blogs-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .blogs-grid { grid-template-columns: repeat(2, 1fr); }
 
-            .blogs-container {
-                padding: 0 15px;
-            }
+            .blogs-container { padding: 0 15px; }
 
-            .blogs-section h2 {
-                font-size: 36px;
-            }
+            .blogs-section h2 { font-size: 36px; }
         }
 
-        /* ================================================
-       RESPONSIVE — MOBILE
-    ================================================= */
         @media (max-width: 600px) {
 
             .blogs-grid {
@@ -2861,22 +2609,16 @@
                 gap: 20px;
             }
 
-            .blogs-section h2 {
-                font-size: 32px;
-            }
+            .blogs-section h2 { font-size: 32px; }
 
             .blogs-section .description {
                 font-size: 14px;
                 margin-bottom: 35px;
             }
 
-            .blogs-card img {
-                height: 220px;
-            }
+            .blogs-card img { height: 220px; }
 
-            .blogs-btn {
-                margin-top: 35px;
-            }
+            .blogs-btn { margin-top: 35px; }
 
             .blogs-btn a {
                 padding: 13px 28px;
@@ -2886,30 +2628,17 @@
 
         @media (max-width: 480px) {
 
-            .blogs-section {
-                padding: 25px 0;
-            }
+            .blogs-section { padding: 25px 0; }
 
-            .blogs-section h2 {
-                font-size: 26px;
-            }
+            .blogs-section h2 { font-size: 26px; }
 
-            .sub-heading {
-                font-size: 13px;
-            }
+            .sub-heading { font-size: 13px; }
 
-            .blog-content {
-                padding: 14px 16px;
-            }
+            .blog-content { padding: 14px 16px; }
 
-            .blog-content h3 {
-                font-size: 16px;
-            }
+            .blog-content h3 { font-size: 16px; }
         }
 
-        /* ================================================
-       ACCESSIBILITY — REDUCED MOTION
-    ================================================= */
         @media (prefers-reduced-motion: reduce) {
 
             .reveal-item,
@@ -2926,374 +2655,311 @@
 
 
         /* ================================
-                               TESTIMONIAL SECTION
-                            ================================= */
-        /* ================================
-   TESTIMONIAL SECTION
-================================= */
-.testimonial-section {
-    padding: 30px 0;
-    overflow: hidden;
-}
+           TESTIMONIAL SECTION
+        ================================= */
+        .testimonial-section {
+            padding: 30px 0;
+            overflow: hidden;
+        }
 
-.testimonial-container {
-    width: 1200px;
-    max-width: 95%;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 60px;
-}
+        .testimonial-container {
+            width: 1200px;
+            max-width: 95%;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 60px;
+        }
 
-/* --- Scroll-triggered staggered reveal (left column) --- */
-.reveal-item {
-    opacity: 0;
-    transform: translateY(25px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-}
+        .testimonial-section.in-view .reveal-item:nth-of-type(1) { transition-delay: 0.1s; }
+        .testimonial-section.in-view .reveal-item:nth-of-type(2) { transition-delay: 0.22s; }
+        .testimonial-section.in-view .reveal-item:nth-of-type(3) { transition-delay: 0.34s; }
+        .testimonial-section.in-view .reveal-item:nth-of-type(4) { transition-delay: 0.46s; }
+        .testimonial-section.in-view .reveal-item:nth-of-type(5) { transition-delay: 0.58s; }
+        .testimonial-section.in-view .reveal-item:nth-of-type(6) { transition-delay: 0.7s; }
 
-.testimonial-section.in-view .reveal-item:nth-of-type(1) { transition-delay: 0.1s; }
-.testimonial-section.in-view .reveal-item:nth-of-type(2) { transition-delay: 0.22s; }
-.testimonial-section.in-view .reveal-item:nth-of-type(3) { transition-delay: 0.34s; }
-.testimonial-section.in-view .reveal-item:nth-of-type(4) { transition-delay: 0.46s; }
-.testimonial-section.in-view .reveal-item:nth-of-type(5) { transition-delay: 0.58s; }
-.testimonial-section.in-view .reveal-item:nth-of-type(6) { transition-delay: 0.7s; }
+        .testimonial-section.in-view .reveal-item {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-.testimonial-section.in-view .reveal-item {
-    opacity: 1;
-    transform: translateY(0);
-}
+        .left { width: 35%; }
 
-/* --- Left column --- */
-.left {
-    width: 35%;
-}
+        .subtitle {
+            color: #9c5a2c;
+            font-size: 14px;
+            font-weight: 500;
+        }
 
-.subtitle {
-    color: #d18b45;
-    font-size: 14px;
-    font-weight: 500;
-}
+        .left h2 {
+            margin: 12px 0;
+            font-size: 46px;
+            color: #6C3F2A;
+            line-height: 1.2;
+            position: relative;
+            display: inline-block;
+        }
 
-.left h2 {
-    margin: 12px 0;
-    font-size: 46px;
-    color: #6C3F2A;
-    line-height: 1.2;
-    position: relative;
-    display: inline-block;
-}
+        .left h2::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            height: 3px;
+            width: 0;
+            background: #d18b45;
+            border-radius: 2px;
+            transition: width 0.7s ease 0.5s;
+        }
 
-.left h2::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -6px;
-    height: 3px;
-    width: 0;
-    background: #d18b45;
-    border-radius: 2px;
-    transition: width 0.7s ease 0.5s;
-}
+        .testimonial-section.in-view .left h2::after {
+            width: 60px;
+        }
 
-.testimonial-section.in-view .left h2::after {
-    width: 60px;
-}
+        .left p {
+            color: #000000;
+            line-height: 1.8;
+            margin: 18px 0;
+        }
 
-.left p {
-    color: #000000;
-    line-height: 1.8;
-    margin: 18px 0;
-}
+        .left h3 {
+            font-size: 1.5rem;
+            margin-top: 30px;
+            color: #2f2925;
+        }
 
-.left h4 {
-    margin-top: 30px;
-    color: #2f2925;
-}
+        .rating {
+            margin-top: 10px;
+            color: #2E3A2E;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
 
-/* --- Rating with staggered stars --- */
-.rating {
-    margin-top: 10px;
-    color: #2E3A2E;
-    font-size: 18px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-}
+        .stars-row { display: inline-flex; }
 
-.stars-row {
-    display: inline-flex;
-}
+        .stars-row .star {
+            display: inline-block;
+            opacity: 0;
+            transform: scale(0) rotate(-90deg);
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: #E8A33D;
+        }
 
-.stars-row .star {
-    display: inline-block;
-    opacity: 0;
-    transform: scale(0) rotate(-90deg);
-    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    color: #E8A33D;
-}
+        .testimonial-section.in-view .stars-row .star:nth-child(1) { transition-delay: 0.75s; }
+        .testimonial-section.in-view .stars-row .star:nth-child(2) { transition-delay: 0.82s; }
+        .testimonial-section.in-view .stars-row .star:nth-child(3) { transition-delay: 0.89s; }
+        .testimonial-section.in-view .stars-row .star:nth-child(4) { transition-delay: 0.96s; }
+        .testimonial-section.in-view .stars-row .star:nth-child(5) { transition-delay: 1.03s; }
 
-.testimonial-section.in-view .stars-row .star:nth-child(1) { transition-delay: 0.75s; }
-.testimonial-section.in-view .stars-row .star:nth-child(2) { transition-delay: 0.82s; }
-.testimonial-section.in-view .stars-row .star:nth-child(3) { transition-delay: 0.89s; }
-.testimonial-section.in-view .stars-row .star:nth-child(4) { transition-delay: 0.96s; }
-.testimonial-section.in-view .stars-row .star:nth-child(5) { transition-delay: 1.03s; }
+        .testimonial-section.in-view .stars-row .star {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
 
-.testimonial-section.in-view .stars-row .star {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-}
+        .rating-text {
+            color: #666;
+            font-size: 14px;
+            margin-left: 8px;
+            opacity: 0;
+            transition: opacity 0.5s ease 1.1s;
+        }
 
-.rating-text {
-    color: #777;
-    font-size: 14px;
-    margin-left: 8px;
-    opacity: 0;
-    transition: opacity 0.5s ease 1.1s;
-}
+        .testimonial-section.in-view .rating-text { opacity: 1; }
 
-.testimonial-section.in-view .rating-text {
-    opacity: 1;
-}
+        .arrow { margin-top: 40px; }
 
-/* --- Curved arrow: draw-in effect --- */
-.arrow {
-    margin-top: 40px;
-}
+        .arrow img {
+            width: 312px;
+            height: auto;
+            display: block;
+            margin-left: 45px;
+            margin-top: -33px;
+            transform-origin: left center;
+            animation: arrowSway 3s ease-in-out infinite;
+        }
 
-.arrow img {
-    width: 312px;
-    height: auto;
-    display: block;
-    margin-left: 45px;
-    margin-top: -33px;
-    transform-origin: left center;
-    animation: arrowSway 3s ease-in-out infinite;
-}
+        .testimonial-section.in-view .arrow img { animation-delay: 1.2s; }
 
-.testimonial-section.in-view .arrow img {
-    animation-delay: 1.2s;
-}
+        @keyframes arrowSway {
+            0%, 100% { transform: rotate(0deg) translateY(0); }
+            50%      { transform: rotate(-4deg) translateY(3px); }
+        }
 
-@keyframes arrowSway {
-    0%, 100% { transform: rotate(0deg) translateY(0); }
-    50%      { transform: rotate(-4deg) translateY(3px); }
-}
+        .cards {
+            width: 65%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
 
-/* --- Right cards --- */
-.cards {
-    width: 65%;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 25px;
-}
-
-.card {
-    position: relative;
-    background: #fff8f2;
-    border: 1px solid #eadfce;
-    border-radius: 15px;
-    padding: 25px 25px 25px 85px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, .05);
-    opacity: 0;
-    transform: translateY(35px);
-    transition: opacity 0.6s ease, transform 0.6s ease,
+        .card {
+            position: relative;
+            background: #fff8f2;
+            border: 1px solid #eadfce;
+            border-radius: 15px;
+            padding: 25px 25px 25px 85px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .05);
+            opacity: 0;
+            transform: translateY(35px);
+            transition: opacity 0.6s ease, transform 0.6s ease,
                 box-shadow 0.4s ease, border-color 0.4s ease;
-}
+        }
 
-.testimonial-section.in-view .card:nth-child(1) { transition-delay: 0.15s; }
-.testimonial-section.in-view .card:nth-child(2) { transition-delay: 0.3s; }
-.testimonial-section.in-view .card:nth-child(3) { transition-delay: 0.45s; }
-.testimonial-section.in-view .card:nth-child(4) { transition-delay: 0.6s; }
+        .testimonial-section.in-view .card:nth-child(1) { transition-delay: 0.15s; }
+        .testimonial-section.in-view .card:nth-child(2) { transition-delay: 0.3s; }
+        .testimonial-section.in-view .card:nth-child(3) { transition-delay: 0.45s; }
+        .testimonial-section.in-view .card:nth-child(4) { transition-delay: 0.6s; }
 
-.testimonial-section.in-view .card {
-    opacity: 1;
-    transform: translateY(0);
-}
+        .testimonial-section.in-view .card {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-.card:hover {
-    box-shadow: 0 20px 40px rgba(163, 116, 55, 0.18);
-    border-color: #A37437;
-    transform: translateY(-8px);
-}
+        .card:hover {
+            box-shadow: 0 20px 40px rgba(163, 116, 55, 0.18);
+            border-color: #A37437;
+            transform: translateY(-8px);
+        }
 
-.card img {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    object-fit: cover;
-    position: absolute;
-    left: 18px;
-    top: 22px;
-    border: 3px solid #A37437;
-    transition: transform 0.4s ease;
-}
+        .card img {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            object-fit: cover;
+            position: absolute;
+            left: 18px;
+            top: 22px;
+            border: 3px solid #A37437;
+            transition: transform 0.4s ease;
+        }
 
-.card:hover img {
-    transform: scale(1.1) rotate(-6deg);
-}
+        .card:hover img {
+            transform: scale(1.1) rotate(-6deg);
+        }
 
-.card h3 {
-    font-size: 16px;
-    letter-spacing: 1px;
-    color: #A37437;
-}
+        .card h3 {
+            font-size: 16px;
+            letter-spacing: 1px;
+            color: #8a5f2b;
+        }
 
-.stars {
-    color: #2E3A2E;
-    margin: 5px 0 12px;
-    font-size: 14px;
-    letter-spacing: 2px;
-}
+        .stars {
+            color: #2E3A2E;
+            margin: 5px 0 12px;
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
 
-.card p {
-    color: #000000;
-    line-height: 1.7;
-    font-size: 14px;
-}
+        .card p {
+            color: #000000;
+            line-height: 1.7;
+            font-size: 14px;
+        }
 
-/* Quote mark decoration on hover */
-.card::before {
-    content: "\201C";
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 50px;
-    font-family: Georgia, serif;
-    color: #A37437;
-    opacity: 0;
-    transform: scale(0.6);
-    transition: opacity 0.35s ease, transform 0.35s ease;
-    pointer-events: none;
-}
+        .card::before {
+            content: "\201C";
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 50px;
+            font-family: Georgia, serif;
+            color: #A37437;
+            opacity: 0;
+            transform: scale(0.6);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            pointer-events: none;
+        }
 
-.card:hover::before {
-    opacity: 0.15;
-    transform: scale(1);
-}
+        .card:hover::before {
+            opacity: 0.15;
+            transform: scale(1);
+        }
 
-/* ================================================
-   RESPONSIVE — TABLET
-================================================= */
-@media (max-width: 1200px) {
-    .testimonial-container {
-        gap: 40px;
-    }
-}
+        @media (max-width: 1200px) {
+            .testimonial-container { gap: 40px; }
+        }
 
-@media (max-width: 991px) {
+        @media (max-width: 991px) {
 
-    .testimonial-container {
-        flex-direction: column;
-    }
+            .testimonial-container { flex-direction: column; }
 
-    .left,
-    .cards {
-        width: 100%;
-    }
+            .left,
+            .cards { width: 100%; }
 
-    .left h2 {
-        font-size: 38px;
-    }
-}
+            .left h2 { font-size: 38px; }
+        }
 
-/* ================================================
-   RESPONSIVE — MOBILE
-================================================= */
-@media (max-width: 768px) {
+        @media (max-width: 768px) {
 
-    .cards {
-        grid-template-columns: 1fr;
-    }
+            .cards { grid-template-columns: 1fr; }
 
-    .move-down {
-        margin-top: 0;
-    }
+            .move-down { margin-top: 0; }
 
-    .left h2 {
-        font-size: 36px;
-    }
+            .left h2 { font-size: 36px; }
 
-    .left h2::after {
-        left: 50%;
-        transform: translateX(-50%);
-    }
+            .left h2::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
 
-    .testimonial-section.in-view .left h2::after {
-        left: 50%;
-        transform: translateX(-50%);
-    }
+            .testimonial-section.in-view .left h2::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
 
-    .arrow {
-        display: none;
-    }
+            .arrow { display: none; }
 
-    .left {
-        text-align: center;
-    }
+            .left { text-align: center; }
 
-    .rating {
-        justify-content: center;
-    }
-}
+            .rating { justify-content: center; }
+        }
 
-@media (max-width: 480px) {
+        @media (max-width: 480px) {
 
-    .left h2 {
-        font-size: 28px;
-    }
+            .left h2 { font-size: 28px; }
 
-    .left p {
-        font-size: 14px;
-    }
+            .left p { font-size: 14px; }
 
-    .card {
-        padding: 20px 20px 20px 75px;
-    }
+            .card { padding: 20px 20px 20px 75px; }
 
-    .card img {
-        width: 45px;
-        height: 45px;
-        left: 15px;
-        top: 18px;
-    }
+            .card img {
+                width: 45px;
+                height: 45px;
+                left: 15px;
+                top: 18px;
+            }
 
-    .card h3 {
-        font-size: 14px;
-    }
+            .card h3 { font-size: 14px; }
 
-    .card p {
-        font-size: 13px;
-    }
-}
+            .card p { font-size: 13px; }
+        }
 
-/* ================================================
-   ACCESSIBILITY — REDUCED MOTION
-================================================= */
-@media (prefers-reduced-motion: reduce) {
-    .reveal-item,
-    .stars-row .star,
-    .rating-text,
-    .arrow img,
-    .left h2::after,
-    .card,
-    .card img,
-    .card::before {
-        transition: none !important;
-        animation: none !important;
-        opacity: 1 !important;
-        transform: none !important;
-    }
-}
+        @media (prefers-reduced-motion: reduce) {
+            .reveal-item,
+            .stars-row .star,
+            .rating-text,
+            .arrow img,
+            .left h2::after,
+            .card,
+            .card img,
+            .card::before {
+                transition: none !important;
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
 
 
         /* ================================
-                               FAQ SECTION
-                            ================================= */
+           FAQ SECTION
+        ================================= */
         .faq-section {
-            padding: 0px 80px;
+            padding: 37px 80px;
             background-color: #FFF2DA;
         }
 
@@ -3302,7 +2968,6 @@
             margin: auto;
             display: grid;
             grid-template-columns: 2fr 1fr;
-            /* gap:60px; */
             align-items: center;
         }
 
@@ -3331,7 +2996,6 @@
             border: 1px solid #2e3a2e57;
             border-radius: 10px;
             overflow: hidden;
-            /* box-shadow:0 3px 10px rgba(0,0,0,.05); */
         }
 
         .accordion-header {
@@ -3382,7 +3046,6 @@
 
         .faq-right img {
             width: 300px;
-            /* Adjust as needed */
             max-width: 100%;
             height: auto;
             display: block;
@@ -3398,27 +3061,19 @@
 
         @media (max-width: 900px) {
 
-            .faq-section {
-                padding: 50px 20px;
-            }
+            .faq-section { padding: 50px 20px; }
 
-            .faq-container {
-                grid-template-columns: 1fr;
-            }
+            .faq-container { grid-template-columns: 1fr; }
 
-            .faq-right {
-                display: none;
-            }
+            .faq-right { display: none; }
 
-            .faq-left h2 {
-                font-size: 30px;
-            }
+            .faq-left h2 { font-size: 30px; }
         }
 
 
         /* ================================
-                               DISCLAIMER SECTION
-                            ================================= */
+           DISCLAIMER SECTION
+        ================================= */
         .disclaimer-section {
             background: #ffffff;
             padding: 22px 0;
@@ -3457,9 +3112,7 @@
 
         @media (max-width: 768px) {
 
-            .disclaimer-section {
-                padding: 18px 15px;
-            }
+            .disclaimer-section { padding: 18px 15px; }
 
             .disclaimer-section p {
                 font-size: 10px;
@@ -3468,17 +3121,27 @@
         }
     </style>
 
-
     {{-- =============================================================
      JAVASCRIPT
+     NOTE: load Swiper's JS with `defer` in layouts/app.blade.php (before this inline script
+     runs on the `load` event, which is when Swiper is initialised below).
 ============================================================== --}}
 
-    <!-- Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
     <script>
+        /* ---------- LCP FIX: start the hero zoom only AFTER the page has loaded ---------- */
+        (function () {
+            function markLoaded() {
+                document.body.classList.add('loaded');
+            }
+            if (document.readyState === 'complete') {
+                markLoaded();
+            } else {
+                window.addEventListener('load', markLoaded);
+            }
+        })();
+
         /* ---------- Return date toggle (booking form) ---------- */
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
 
             const tripRadios = document.querySelectorAll('input[name="trip"]');
             const returnDateBox = document.getElementById("returnDateBox");
@@ -3507,34 +3170,18 @@
         });
 
 
-        /* ---------- Return date show/hide (secondary trip listener) ---------- */
-        const tripOptions = document.querySelectorAll('input[name="trip"]');
-        const returnDate = document.getElementById('returnDate');
-
-        tripOptions.forEach(option => {
-            option.addEventListener('change', function() {
-
-                if (this.value === "oneway") {
-                    returnDate.style.display = "none";
-                } else {
-                    returnDate.style.display = "block";
-                }
-
-            });
-        });
-
-
         /* ---------- Passenger dropdown + date icon triggers ---------- */
+        const profileIcon = document.querySelector('.input-box img[src*="profile"]');
 
-        // Passenger dropdown
-        document.querySelector('.input-box img[src*="profile"]').addEventListener('click', function() {
-            this.previousElementSibling.focus();
-            this.previousElementSibling.click();
-        });
+        if (profileIcon) {
+            profileIcon.addEventListener('click', function () {
+                this.previousElementSibling.focus();
+                this.previousElementSibling.click();
+            });
+        }
 
-        // Date icons
-        document.querySelectorAll('.input-box img[src*="calendar"]').forEach(function(icon) {
-            icon.addEventListener('click', function() {
+        document.querySelectorAll('.input-box img[src*="calendar"]').forEach(function (icon) {
+            icon.addEventListener('click', function () {
                 const input = this.previousElementSibling;
 
                 if (input.showPicker) {
@@ -3551,6 +3198,8 @@
         let mobileSwiper;
 
         function initSwiper() {
+
+            if (typeof Swiper === 'undefined') return;
 
             if (window.innerWidth <= 991) {
 
@@ -3584,25 +3233,17 @@
 
 
         /* ---------- FAQ accordion ---------- */
-        const headers = document.querySelectorAll(".accordion-header");
-
-        headers.forEach(header => {
-
+        document.querySelectorAll(".accordion-header").forEach(header => {
             header.addEventListener("click", () => {
-
-                const item = header.parentElement;
-
-                item.classList.toggle("active");
-
+                header.parentElement.classList.toggle("active");
             });
-
         });
 
         /* ---------- Button ripple effect ---------- */
         const bookingBtn = document.querySelector('.booking-form button');
 
         if (bookingBtn) {
-            bookingBtn.addEventListener('click', function(e) {
+            bookingBtn.addEventListener('click', function (e) {
                 const circle = document.createElement('span');
                 const diameter = Math.max(this.clientWidth, this.clientHeight);
                 const radius = diameter / 2;
@@ -3634,25 +3275,26 @@
             });
         });
 
-        /* ---------- About section: scroll-triggered reveal ---------- */
-        const aboutSection = document.getElementById('aboutSection');
-
-        if (aboutSection) {
-            const aboutObserver = new IntersectionObserver((entries) => {
+        /* ---------- Reusable one-shot scroll reveal ---------- */
+        function revealOnce(el, threshold) {
+            if (!el) return;
+            const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('in-view');
-                        aboutObserver.unobserve(entry.target);
+                        observer.unobserve(entry.target);
                     }
                 });
-            }, {
-                threshold: 0.2
-            });
-
-            aboutObserver.observe(aboutSection);
+            }, { threshold: threshold });
+            observer.observe(el);
         }
 
-        /* ---------- Stack cards: scroll-triggered reveal ---------- */
+        /* About, destination, testimonial sections */
+        revealOnce(document.getElementById('aboutSection'), 0.2);
+        revealOnce(document.getElementById('destinationSection'), 0.15);
+        revealOnce(document.querySelector('.testimonial-section'), 0.15);
+
+        /* ---------- Stack cards: scroll-triggered reveal (replays on scroll back) ---------- */
         const stackCards = document.querySelectorAll('[data-stack-card]');
 
         if (stackCards.length) {
@@ -3661,39 +3303,18 @@
                     if (entry.isIntersecting) {
                         entry.target.classList.add('in-view');
                     } else {
-                        // Remove so it can replay when scrolling back up (nice for sticky-stack effect)
                         entry.target.classList.remove('in-view');
                     }
                 });
-            }, {
-                threshold: 0.35
-            });
+            }, { threshold: 0.35 });
 
             stackCards.forEach(card => stackObserver.observe(card));
-        }
-
-        /* ---------- Destination section: scroll-triggered reveal ---------- */
-        const destinationSection = document.getElementById('destinationSection');
-
-        if (destinationSection) {
-            const destinationObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('in-view');
-                        destinationObserver.unobserve(entry.target);
-                    }
-                });
-            }, {
-                threshold: 0.15
-            });
-
-            destinationObserver.observe(destinationSection);
         }
 
         /* ---------- Flip cards: tap to flip on touch devices ---------- */
         if ('ontouchstart' in window) {
             document.querySelectorAll('.flip-card').forEach(card => {
-                card.addEventListener('click', function() {
+                card.addEventListener('click', function () {
                     this.classList.toggle('flipped');
                 });
             });
@@ -3704,40 +3325,12 @@
 
         if (blogsSection) {
             // Auto-stagger blog cards regardless of how many are rendered
-            const blogCards = blogsSection.querySelectorAll('.blogs-card');
-            blogCards.forEach((card, i) => {
+            blogsSection.querySelectorAll('.blogs-card').forEach((card, i) => {
                 card.style.transitionDelay = `${0.15 + i * 0.12}s`;
             });
 
-            const blogsObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('in-view');
-                        blogsObserver.unobserve(entry.target);
-                    }
-                });
-            }, {
-                threshold: 0.1
-            });
-
-            blogsObserver.observe(blogsSection);
+            revealOnce(blogsSection, 0.1);
         }
-
-        /* ---------- Testimonial section: scroll-triggered reveal ---------- */
-const testimonialSection = document.querySelector('.testimonial-section');
-
-if (testimonialSection) {
-    const testimonialObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('in-view');
-                testimonialObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.15 });
-
-    testimonialObserver.observe(testimonialSection);
-}
     </script>
 
 @endsection

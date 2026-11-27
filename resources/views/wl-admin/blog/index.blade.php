@@ -27,20 +27,50 @@
                                 <th>Subcategory</th>
                                 <th>Status</th>
                                 <th>Created</th>
+                                <th>Updated</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($blogs as $blog)
                                 <tr>
-                                    <td>{{ $blog->id }}</td>
+                                    <td>{{ $blogs->firstItem() + $loop->index }}</td>
                                     <td>{{ $blog->blog_heading }}</td>
                                     <td>{{ $blog->category->name ?? '—' }}</td>
                                     <td>{{ $blog->subcategory->name ?? '—' }}</td>
                                     <td>{{ $blog->is_draft ? 'Draft' : 'Published' }}</td>
                                     <td>{{ $blog->created_at->format('d M Y') }}</td>
+                                    <td>{{ $blog->updated_at->format('d M Y') }}</td>
                                     <td>
                                         <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                            
+                                            {{-- Preview --}}
+{{-- Preview --}}
+@php
+    $categorySlug = $blog->subcategory?->slug ?? $blog->category?->slug;
+@endphp
+
+@if($categorySlug && $blog->blog_url)
+
+    <a href="{{ route('blogdetails', [
+            'cate_subcate' => $categorySlug,
+            'blog_slug' => $blog->blog_url,
+        ]) }}"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="btn btn-sm btn-ledger-preview">
+        Preview
+    </a>
+
+@else
+
+    <button type="button"
+            class="btn btn-sm btn-secondary"
+            disabled>
+        No URL
+    </button>
+
+@endif
                                             <a href="{{ route('admin.blog.edit', $blog->id) }}" class="btn btn-sm btn-ledger-edit">Edit</a>
                                             @if(auth('admin')->user()?->role === 'admin')
                                                 <form action="{{ route('admin.blog.destroy', $blog->id) }}" method="POST" class="m-0">
@@ -176,6 +206,50 @@
         .ledger-link:hover {
             color: var(--navy-deep);
         }
+        
+        
+        .btn-ledger-preview {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #ffffff;
+    background-color: var(--brass);
+    border: 1px solid var(--brass);
+    border-radius: 4px;
+    text-decoration: none;
+    line-height: 1.5;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+    cursor: pointer;
+}
+
+.btn-ledger-preview:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+    color: #ffffff;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+.btn-ledger-preview:active {
+    background-color: #117a8b;
+    border-color: #10707f;
+    transform: translateY(0);
+}
+
+.btn-ledger-preview:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.35);
+}
+
+/* Optional: add an eye icon before text if you use one */
+.btn-ledger-preview::before {
+    content: "";
+}
+        
     </style>
 @endsection
 

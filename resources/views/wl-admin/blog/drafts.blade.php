@@ -32,6 +32,10 @@
                         </thead>
                         <tbody>
                             @forelse($blogs as $blog)
+                                @php
+                                    $blogSlug = \Illuminate\Support\Str::slug($blog->blog_heading);
+                                @endphp
+
                                 <tr>
                                     <td>{{ $loop->iteration + ($blogs->currentPage() - 1) * $blogs->perPage() }}</td>
                                     <td>{{ $blog->created_at?->format('d M Y') }}</td>
@@ -43,7 +47,24 @@
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-2 flex-wrap">
+
+{{-- Preview --}}
+<a href="{{ route('draftblogdetails', [
+        'cate_subcate' => \Illuminate\Support\Str::slug($blog->subcategory->slug ?? $blog->category->slug),
+        'blog_slug'    => $blog->preview_slug,
+    ]) }}"
+   target="_blank"
+   rel="noopener noreferrer nofollow"
+   class="btn btn-sm btn-ledger-preview">
+    Preview
+</a>
+
+
+
+
+
                                             <a href="{{ route('admin.blog.edit', $blog->id) }}" class="btn btn-sm btn-ledger-edit">Edit</a>
+
                                             @if(auth('admin')->user()?->role === 'admin')
                                                 <form action="{{ route('admin.blog.destroy', $blog->id) }}" method="POST" class="m-0">
                                                     @csrf
@@ -124,6 +145,25 @@
 
         .ledger-table tbody tr:hover {
             background: rgba(201, 162, 106, .08);
+        }
+
+        .btn-sm {
+            min-width: 80px;
+            height: 36px;
+            border-radius: .5rem;
+            font-weight: 600;
+            font-size: .82rem;
+        }
+
+        .btn-ledger-preview {
+            background: var(--brass);
+            color: var(--navy-deep);
+            border: none;
+        }
+
+        .btn-ledger-preview:hover {
+            background: var(--brass-bright);
+            color: var(--navy-deep);
         }
 
         .btn-ledger-edit {

@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Contact')
+@section('title', 'Contact Us – Get Travel Booking Help at English Traveller')
+
+@section('meta_description', 'Need help with flights, hotels or tour bookings? Our friendly team is one call away to answer your queries and guide you to the right travel option today.')
+
 
 @section('content')
 <section class="contact-banner">
@@ -9,24 +12,68 @@
             <h1>Contact <span>Us</span></h1>
 
             <p>
-                We welcome to the English Traveller. We are an independent travel-related
-                information provider site.
+               We welcome you warm-heartedly to the English Traveller. We are an independent travel related information provider.
+
             </p>
+            
+             <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="banner-breadcrumb">
+                <ol class="breadcrumb justify-content-center mb-0">
+                    <li class="breadcrumb-item">
+                        <a href="{{ url('/') }}">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                       contact Us
+                    </li>
+                </ol>
+            </nav>
         </div>
     </div>
 </section>
 
 <style>
-.contact-banner{
-    background: url("{{ asset('images/christmas.png') }}") center center/cover no-repeat;
+.contact-banner {
+    background: url("/images/et_contact_us_bg.webp") center center / cover no-repeat;
     height: 260px;
     position: relative;
+}
+
+.banner-breadcrumb {
+    margin-top: 20px;
+}
+
+.banner-breadcrumb .breadcrumb {
+    background: transparent;
+    justify-content: center;
+}
+
+.banner-breadcrumb .breadcrumb-item,
+.banner-breadcrumb .breadcrumb-item.active {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.banner-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    color: #ffffff;
+    padding: 0 10px;
+}
+
+.banner-breadcrumb .breadcrumb-item a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.banner-breadcrumb .breadcrumb-item a:hover {
+    color: #fff;
 }
 
 .contact-banner .overlay{
     position: absolute;
     inset: 0;
-    background: rgba(88, 54, 36, 0.65); /* Brown transparent overlay */
+    background: rgb(88 54 36 / 95%); /* Brown transparent overlay */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -269,13 +316,12 @@
         <!-- Left -->
         <div class="map-info">
 
-            <h2>Contact for any query</h2>
+            <h2>For any Query, get in Touch with us</h2>
 
             <p class="map-desc">
                 <span>Get In Touch</span><br>
-                Contact us for expert assistance with your airline ticket bookings and travel inquiries.
-                Our team is here to provide efficient and personalized service.
-                <a href="#">Call Now.</a>
+                You can contact us anytime regarding any airline-related issue and the different travel inquiries. Our team is here to help you out. 
+                <a href="tel:+18444263848">Call Now.</a>
             </p>
 
             <div class="map-boxes">
@@ -283,10 +329,14 @@
                     <i class="fa-solid fa-phone"></i>
                 </div>
 
-                <div>
-                    <h4>Phone No.</h4>
-                    <p>+1-844-426-3848</p>
-                </div>
+       <div>
+    <h4>Phone No.</h4>
+    <p>
+        <a href="tel:+18444263848" class="phone-link">
+            +1-844-426-3848
+        </a>
+    </p>
+</div>
             </div>
 
             <div class="divider"></div>
@@ -296,10 +346,14 @@
                     <i class="fa-solid fa-envelope"></i>
                 </div>
 
-                <div>
-                    <h4>E-mail</h4>
-                    <p>englishtrevel.info@gmail.com</p>
-                </div>
+             <div>
+    <h4>E-mail</h4>
+    <p>
+        <a href="mailto:info@englishtraveller.us" class="email-link">
+            info@englishtraveller.us
+        </a>
+    </p>
+</div>
             </div>
 
             <div class="map-divider"></div>
@@ -473,6 +527,24 @@
     width:100%;
     border-radius:18px;
     display:block;
+}
+
+.phone-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.phone-link:hover {
+    text-decoration: none;
+}
+
+.email-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.email-link:hover {
+    text-decoration: none;
 }
 
 /* ==========================

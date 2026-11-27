@@ -33,6 +33,8 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:categories,slug',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:160',
             'description' => 'nullable|string',
             'status' => 'required|in:active,inactive',
         ]);
@@ -50,6 +52,8 @@ class CategoryController extends Controller
         Category::create([
             'name' => $request->name,
             'slug' => $slug,
+             'meta_title' => $request->meta_title,
+            'meta_description' => $request->meta_description,
             'description' => $request->description,
             'status' => $request->status,
         ]);
@@ -77,6 +81,9 @@ class CategoryController extends Controller
                 'max:255',
                 Rule::unique('categories', 'slug')->ignore($category->id),
             ],
+            
+              'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:160',
             'description' => 'nullable|string',
             'status' => 'required|in:active,inactive',
         ]);
@@ -94,6 +101,8 @@ class CategoryController extends Controller
         $category->update([
             'name' => $request->name,
             'slug' => $slug,
+              'meta_title' => $request->meta_title,
+            'meta_description' => $request->meta_description,
             'description' => $request->description,
             'status' => $request->status,
         ]);

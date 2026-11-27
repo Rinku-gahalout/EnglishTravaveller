@@ -47,46 +47,62 @@ class AdminController extends Controller
         ], 401);
     }
 
-    public function dashboard(Request $request)
-    {
-        $search   = trim((string) $request->query('search'));
-        $category = $request->query('category');
+  public function dashboard(Request $request)
+{
+    $search   = trim((string) $request->query('search'));
+    $category = $request->query('category');
 
-        $blogsQuery = Blog::with(['category', 'subcategory'])
-            ->orderBy('created_at', 'desc');
+    // Home dashboard:
+    // Show ONLY blogs created on or after 10 September 2026
+    $blogsQuery = Blog::with(['category', 'subcategory'])
+        ->where('is_draft', 0)
+        ->where('created_at', '>=', '2026-09-10 00:00:00')
+        ->orderBy('created_at', 'desc');
 
-        if (!empty($category)) {
-            $blogsQuery->where('category_id', $category);
-        }
-
-        if (!empty($search)) {
-            $blogsQuery->where(function ($q) use ($search) {
-                $q->where('blog_heading', 'like', '%' . $search . '%')
-                  ->orWhere('meta_title', 'like', '%' . $search . '%')
-                  ->orWhere('meta_keywords', 'like', '%' . $search . '%');
-            });
-        }
-
-        $blogs = $blogsQuery->paginate(10)->withQueryString();
-
-        $categories = Category::orderBy('name')->get();
-
-        $totalBlogs      = Blog::count();
-        $publishedBlogs  = Blog::where('is_draft', 0)->count();
-        $draftBlogs      = Blog::where('is_draft', 1)->count();
-        $totalCategories = Category::count();
-
-        return view('wl-admin.dashboard', compact(
-            'blogs',
-            'categories',
-            'totalBlogs',
-            'publishedBlogs',
-            'draftBlogs',
-            'totalCategories',
-            'search',
-            'category'
-        ));
+    if (!empty($category)) {
+        $blogsQuery->where('category_id', $category);
     }
+
+    if (!empty($search)) {
+        $blogsQuery->where(function ($q) use ($search) {
+            $q->where('blog_heading', 'like', '%' . $search . '%')
+              ->orWhere('meta_title', 'like', '%' . $search . '%')
+              ->orWhere('meta_keywords', 'like', '%' . $search . '%');
+        });
+    }
+
+    $blogs = $blogsQuery
+        ->paginate(10)
+        ->withQueryString();
+
+    $categories = Category::orderBy('name')->get();
+
+    // Statistics — also based on 10 September 2026 onwards
+    $totalBlogs = Blog::where('created_at', '>=', '2026-09-10 00:00:00')
+        ->count();
+
+    $publishedBlogs = Blog::where('is_draft', 0)
+        ->where('created_at', '>=', '2026-09-10 00:00:00')
+        ->count();
+
+    $draftBlogs = Blog::where('is_draft', 1)
+        ->where('created_at', '>=', '2026-09-10 00:00:00')
+        ->count();
+
+    $totalCategories = Category::count();
+
+    return view('wl-admin.dashboard', compact(
+        'blogs',
+        'categories',
+        'totalBlogs',
+        'publishedBlogs',
+        'draftBlogs',
+        'totalCategories',
+        'search',
+        'category'
+    ));
+}
+
 
     public function logout(Request $request){
         Auth::guard('admin')->logout();

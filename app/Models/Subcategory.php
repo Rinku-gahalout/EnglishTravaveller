@@ -10,6 +10,8 @@ class Subcategory extends Model
         'category_id',
         'name',
         'slug',
+        'meta_title',
+        'meta_description',
         'description',
         'status',
     ];

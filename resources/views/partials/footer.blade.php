@@ -4,11 +4,11 @@
 
         <!-- Newsletter -->
         <div class="newsletter-box">
-            <h2>Want to consult with our team?</h2>
+            <h2>Want to Get in Touch with Our Team?</h2>
 
             <p>
-                Get best rates on the flights of san fransico. Know about the places to
-                explore in san fransico and the best way to book at low prices.
+               Get the best deals on flights to San Francisco, 
+               Ohio, and other famous destinations of the US.
             </p>
 
             <form class="newsletter-form">
@@ -23,29 +23,33 @@
         <div class="row footer-top">
 
             <div class="col-lg-3">
-                <img src="{{ asset('images/Group (1).png') }}" class="footer-logo">
+                <img src="{{ asset('images/Group (1).png') }}" alt="LOGO" class="footer-logo">
 
                 <p class="footer-text">
-                    Englishtraveller is your movement amigo who designs every one
-                    of your movements around the Worldwide with Markdown Flights
-                    Arrangements.
+                   English Traveller is the airline-based website that is designed
+                   to fulfill your affordable flight deals worldwide. Through this
+                   website, you will get the best flight deals.
                 </p>
             </div>
 
             <div class="col-6 col-lg-2">
-                <h5>Reach Out</h5>
+                <h3>Reach Out</h3>
 
                 <ul>
                     <li><a href="{{ route('home') }}">Home</a></li>
                     <li><a href="{{ route('contact') }}">Contact Us</a></li>
                     <li><a href="{{ route('about') }}">About Us</a></li>
-                    <li><a href="#">Blogs</a></li>
-                    <li><a href="#">News</a></li>
+                    <li>
+    <a href="{{ route('categoryblogs', ['cate_subcate' => 'blog']) }}">
+        Blog
+    </a>
+</li>
+                    
                 </ul>
             </div>
 
             <div class="col-6 col-lg-3">
-                <h5>International Tours</h5>
+                <h3>International Tours</h3>
 
                 <ul>
                     <li><a href="#">Maldives Tour</a></li>
@@ -58,18 +62,18 @@
             </div>
 
             <div class="col-lg-4">
-                <h5>Contact Us</h5>
+                <h3>Contact Us</h3>
 
                 <ul class="contact-info">
-                    <li>
-                        <img src="{{ asset('images/Vector (1).png') }}" alt="Phone" width="20">
-                        +1-844-426-3868
-                    </li>
+                 <li>
+    <img src="{{ asset('images/Vector (1).png') }}" alt="Phone" width="20">
+    <a href="tel:+18444263868">+1-844-426-3868</a>
+</li>
 
-                    <li>
-                        <img src="{{ asset('images/Vector (2).png') }}" alt="Email" width="20">
-                        englishtraveler.info@gmail.com
-                    </li>
+<li>
+    <img src="{{ asset('images/Vector (2).png') }}" alt="Email" width="20">
+    <a href="mailto:info@englishtraveller.us">info@englishtraveller.us</a>
+</li>
 
                     <li>
                         <img src="{{ asset('images/Group 69.png') }}" alt="Location" width="20">
@@ -77,19 +81,28 @@
                     </li>
                 </ul>
 
-                <div class="social-icons">
+             
+<div class="social-icons">
 
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+    <a href="#" aria-label="Facebook">
+        <i class="fab fa-facebook-f" aria-hidden="true"></i>
+    </a>
 
-                    <a href="#"><i class="fab fa-twitter"></i></a>
+    <a href="#" aria-label="Instagram">
+        <i class="fab fa-instagram" aria-hidden="true"></i>
+    </a>
 
-                    <a href="#"><i class="fab fa-instagram"></i></a>
+    <a href="#" aria-label="Twitter">
+        <i class="fab fa-twitter" aria-hidden="true"></i>
+    </a>
 
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    <a href="#" aria-label="LinkedIn">
+        <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+    </a>
 
-                    <a href="#"><i class="fab fa-youtube"></i></a>
+</div>
 
-                </div>
+
 
             </div>
 
@@ -104,6 +117,7 @@
             <div>
                 <a href="{{ route('privacyPolicy') }}">Privacy Policy</a>
                 <a href="{{ route('term_conditions') }}">Terms & Conditions</a>
+                 <a href="{{ route('disclaimer') }}">Disclaimer</a>
             </div>
 
         </div>
@@ -114,7 +128,15 @@
 
 <div class="mobile-bottom-bar d-lg-none">
     <a href="tel:+18444263868" class="mobile-call-btn">
-        <img src="{{ asset('images/call-calling.png') }}" alt="Call" width="20">
+     
+<img
+    src="{{ asset('images/call-calling.png') }}"
+    alt="Call"
+    width="20"
+    height="20"
+>
+
+
         +1-844-426-3868
     </a>
 </div>
