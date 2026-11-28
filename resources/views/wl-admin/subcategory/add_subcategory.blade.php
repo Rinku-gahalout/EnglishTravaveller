@@ -1,618 +1,284 @@
 @extends('wl-admin.layouts.app')
 
+@section('title', 'Add subcategory')
+
 @section('content')
-    <div class="container-fluid py-4 ledger-dash">
+<div class="container-fluid py-4 flight">
 
-        @include('wl-admin.layouts.sessionmessage')
+    @include('wl-admin.layouts.sessionmessage')
 
-        <!-- ================= PAGE HEADER ================= -->
-        <div class="page-header mb-4 p-4 rounded-4 shadow-sm bg-white border ledger-header">
-
+    <header class="page-head mb-4">
+        <div class="page-head__main">
+            <span class="page-head__icon"><i class='bx bx-purchase-tag-alt'></i></span>
             <div>
-                <h2 class="mb-1">Add Subcategory</h2>
-                <p class="mb-0 text-secondary">
-                    Create a subcategory and assign it to a category.
-                </p>
+                <h1>Add subcategory</h1>
+                <p>Create a subcategory and assign it to a category.</p>
+            </div>
+        </div>
+        <div class="page-head__actions">
+            <a href="{{ route('admin.subcategories.list') }}" class="btn btn-outline-sky"><i class='bx bx-list-ul'></i> Subcategory list</a>
+            <a href="{{ route('admin.categories.listCategory') }}" class="btn btn-outline-sky"><i class='bx bx-category'></i> Category list</a>
+        </div>
+    </header>
+
+    <form method="POST" action="{{ route('admin.subcategory.store') }}" novalidate>
+        @csrf
+
+        {{-- ===================== BASIC INFO ===================== --}}
+        <section class="panel mb-4">
+            <div class="form-section">
+                <span class="form-section__icon"><i class='bx bx-info-circle'></i></span>
+                <h2>Basic info</h2>
             </div>
 
-            <div class="d-flex gap-2 flex-wrap">
-                <a href="{{ route('admin.subcategories.list') }}"
-                   class="btn btn-outline-ledger">
-                    Subcategory List
-                </a>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="category_id" class="field-label">Parent category</label>
+                    <select id="category_id" name="category_id"
+                            class="form-select form-field @error('category_id') is-invalid @enderror">
+                        <option value="">Select category</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}"
+                                {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-                <a href="{{ route('admin.categories.listCategory') }}"
-                   class="btn btn-outline-ledger">
-                    Category List
-                </a>
+                <div class="col-md-4">
+                    <label for="name" class="field-label">Subcategory name</label>
+                    <input type="text" id="name" name="name" value="{{ old('name') }}"
+                           maxlength="255" autocomplete="off" placeholder="Enter subcategory name..."
+                           class="form-control form-field @error('name') is-invalid @enderror">
+                    @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-md-4">
+                    <label for="slug" class="field-label">Slug (optional)</label>
+                    <input type="text" id="slug" name="slug" value="{{ old('slug') }}"
+                           maxlength="255" autocomplete="off" placeholder="Enter slug..."
+                           class="form-control form-field @error('slug') is-invalid @enderror">
+                    @error('slug')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                    <div class="form-hint">Leave blank to auto-generate from the subcategory name.</div>
+                </div>
+            </div>
+        </section>
+
+        {{-- ===================== SEO ===================== --}}
+        <section class="panel mb-4">
+            <div class="form-section">
+                <span class="form-section__icon"><i class='bx bx-search-alt'></i></span>
+                <h2>SEO and meta</h2>
             </div>
 
-        </div>
-
-
-        <!-- ================= FORM CARD ================= -->
-        <div class="card ledger-card mb-4">
-
-            <div class="card-body">
-
-                <form method="POST"
-                      action="{{ route('admin.subcategory.store') }}">
-
-                    @csrf
-
-<!-- ================= CATEGORY ================= -->
-<div class="mb-3">
-
-    <label for="category_id"
-           class="form-label ledger-label">
-        Parent Category
-    </label>
-
-    <select id="category_id"
-            name="category_id"
-            class="form-select ledger-input @error('category_id') is-invalid @enderror">
-
-        <option value="">
-            Select Category
-        </option>
-
-        @foreach($categories as $category)
-
-            <option value="{{ $category->id }}"
-                {{ old('category_id') == $category->id ? 'selected' : '' }}>
-
-                {{ $category->name }}
-
-            </option>
-
-        @endforeach
-
-    </select>
-
-    @error('category_id')
-        <div class="invalid-feedback">
-            {{ $message }}
-        </div>
-    @enderror
-
-</div>
-
-
-<!-- ================= NAME ================= -->
-<div class="mb-3">
-
-    <label for="name"
-           class="form-label ledger-label">
-        Subcategory Name
-    </label>
-
-    <input type="text"
-           id="name"
-           name="name"
-           value="{{ old('name') }}"
-           class="form-control ledger-input @error('name') is-invalid @enderror">
-
-    @error('name')
-        <div class="invalid-feedback">
-            {{ $message }}
-        </div>
-    @enderror
-
-</div>
-
-
-<!-- ================= SLUG ================= -->
-<div class="mb-3">
-
-    <label for="slug"
-           class="form-label ledger-label">
-        Slug (optional)
-    </label>
-
-    <input type="text"
-           id="slug"
-           name="slug"
-           value="{{ old('slug') }}"
-           class="form-control ledger-input @error('slug') is-invalid @enderror">
-
-    <div class="form-text text-secondary">
-        Leave blank to auto-generate from the subcategory name.
-    </div>
-
-    @error('slug')
-        <div class="invalid-feedback">
-            {{ $message }}
-        </div>
-    @enderror
-
-</div>
-
-
-<!-- ================= TITLE ================= -->
-<!-- ================= META TITLE ================= -->
-<div class="mb-3">
-
-    <label for="meta_title"
-           class="form-label ledger-label">
-        Meta Title
-    </label>
-
-    <input type="text"
-           id="meta_title"
-           name="meta_title"
-           value="{{ old('meta_title') }}"
-           maxlength="255"
-           class="form-control ledger-input @error('meta_title') is-invalid @enderror"
-           placeholder="Enter meta title...">
-
-    @error('meta_title')
-        <div class="invalid-feedback">
-            {{ $message }}
-        </div>
-    @enderror
-
-</div>
-
-  <div class="row g-3 mt-1">
-                        <div class="col-md-12">
-                            <label class="form-label ledger-label">Meta Keywords</label>
-                            <input type="text" name="meta_keywords" value="{{ old('meta_keywords') }}" class="form-control ledger-input @error('meta_keywords') is-invalid @enderror">
-                            @error('meta_keywords')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-<!-- ================= META DESCRIPTION ================= -->
-<div class="mb-3">
-
-    <label for="meta_description"
-           class="form-label ledger-label">
-        Meta Description
-    </label>
-
-    <textarea id="meta_description"
-              name="meta_description"
-              rows="3"
-              maxlength="160"
-              class="form-control ledger-input @error('meta_description') is-invalid @enderror"
-              placeholder="Enter a short description for search engines...">{{ old('meta_description') }}</textarea>
-
-    <div class="d-flex justify-content-between mt-1">
-
-        <div class="form-text text-secondary">
-            Recommended length: 150–160 characters.
-        </div>
-
-        <div class="form-text">
-            <span id="meta-description-count">0</span>/160
-        </div>
-
-    </div>
-
-    @error('meta_description')
-        <div class="invalid-feedback">
-            {{ $message }}
-        </div>
-    @enderror
-
-</div>
-
-
-<!-- ================= CONTENT / SUMMERNOTE ================= -->
-<div class="mb-3">
-
-    <label for="description"
-           class="form-label ledger-label">
-        Content
-    </label>
-
-    <textarea id="description"
-              name="description"
-              rows="6"
-              class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
-
-    @error('description')
-        <div class="invalid-feedback">
-            {{ $message }}
-        </div>
-    @enderror
-
-</div>
-
-
-<!-- ================= STATUS ================= -->
-<div class="mb-3">
-
-    <label for="status"
-           class="form-label ledger-label">
-        Status
-    </label>
-
-    <select id="status"
-            name="status"
-            class="form-select ledger-input @error('status') is-invalid @enderror">
-
-        <option value="active"
-            {{ old('status') == 'active' ? 'selected' : '' }}>
-            Active
-        </option>
-
-        <option value="inactive"
-            {{ old('status') == 'inactive' ? 'selected' : '' }}>
-            Inactive
-        </option>
-
-    </select>
-
-    @error('status')
-        <div class="invalid-feedback">
-            {{ $message }}
-        </div>
-    @enderror
-
-</div>
-
-
-<!-- ================= BUTTON ================= -->
-<button type="submit"
-        class="btn btn-brass">
-    Save Subcategory
-</button>
-
-
-                </form>
-
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="meta_title" class="field-label">Meta title</label>
+                    <input type="text" id="meta_title" name="meta_title" value="{{ old('meta_title') }}"
+                           maxlength="255" autocomplete="off" placeholder="Enter SEO meta title..."
+                           class="form-control form-field @error('meta_title') is-invalid @enderror">
+                    @error('meta_title')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-md-6">
+                    <label for="meta_keywords" class="field-label">Meta keywords</label>
+                    <input type="text" id="meta_keywords" name="meta_keywords" value="{{ old('meta_keywords') }}"
+                           class="form-control form-field @error('meta_keywords') is-invalid @enderror">
+                    @error('meta_keywords')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
 
-        </div>
+            <div class="row g-3 mt-1">
+                <div class="col-12">
+                    <label for="meta_description" class="field-label d-flex justify-content-between">
+                        <span>Meta description</span>
+                        <span id="meta-description-count" class="counter">0 / 160</span>
+                    </label>
+                    <textarea id="meta_description" name="meta_description" rows="3" maxlength="160"
+                              placeholder="Write a short description for search engines..."
+                              class="form-control form-field @error('meta_description') is-invalid @enderror">{{ old('meta_description') }}</textarea>
+                    @error('meta_description')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                    <div class="form-hint">Recommended length: 150–160 characters.</div>
+                </div>
+            </div>
+        </section>
 
-    </div>
+        {{-- ===================== CONTENT ===================== --}}
+        <section class="panel mb-4">
+            <div class="form-section">
+                <span class="form-section__icon"><i class='bx bx-edit-alt'></i></span>
+                <h2>Content</h2>
+            </div>
+
+            <textarea id="description" name="description" rows="6"
+                      class="form-control form-field @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+            @error('description')
+                <div class="invalid-feedback d-block">{{ $message }}</div>
+            @enderror
+        </section>
+
+        {{-- ===================== STATUS + SAVE ===================== --}}
+        <section class="panel">
+            <div class="form-actions">
+                <div class="form-actions__status">
+                    <label for="status" class="field-label mb-0">Status</label>
+                    <select id="status" name="status" class="form-select form-field @error('status') is-invalid @enderror">
+                        <option value="active" {{ old('status', 'active') === 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ old('status', 'active') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                    </select>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a href="{{ route('admin.subcategories.list') }}" class="btn btn-outline-sky">Cancel</a>
+                    <button type="submit" class="btn btn-sunset px-4"><i class='bx bx-save'></i> Save subcategory</button>
+                </div>
+            </div>
+            @error('status')
+                <div class="text-danger small mt-2">{{ $message }}</div>
+            @enderror
+        </section>
+
+    </form>
+
+</div>
 @endsection
 
 
-{{-- =========================================================
-     PAGE STYLES
-========================================================= --}}
 @section('styles')
+<style>
+.flight { color: var(--ink); }
+/* Buttons */
+        .flight .btn { border-radius: .6rem; font-weight: 600; padding: .55rem 1.1rem; display: inline-flex; align-items: center; justify-content: center; gap: .4rem; }
+        .flight .btn i { font-size: 1.15rem; }
+        .flight .btn-sm { padding: .35rem .8rem; font-size: .85rem; }
+        .flight .btn-sunset { background: var(--sunset); border: 1px solid var(--sunset); color: #fff; }
+        .flight .btn-sunset:hover { background: var(--sunset-bright); border-color: var(--sunset-bright); color: var(--navy-deep); box-shadow: 0 8px 18px rgba(156, 96, 55, .3); }
+        .flight .btn-outline-sky { background: transparent; border: 1px solid var(--navy-soft); color: var(--navy-soft); }
+        .flight .btn-outline-sky:hover { background: var(--navy-soft); color: #fff; }
+        .flight .btn-remove { background: transparent; border: 1px solid rgba(214, 69, 69, .5); color: var(--red); }
+        .flight .btn-remove:hover { background: var(--red); border-color: var(--red); color: #fff; }
+        .flight .btn:focus-visible, .flight .icon-btn:focus-visible, .flight .route-link:focus-visible { outline: 3px solid var(--sky-bright); outline-offset: 2px; }
 
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
+        /* Page header (inner pages) */
+        .page-head {
+            position: relative; overflow: hidden;
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+            padding: 1.25rem 1.5rem 1.25rem 1.75rem; background: #fff;
+            border: 1px solid var(--line); border-radius: .9rem;
+            box-shadow: 0 6px 18px rgba(45, 56, 43, .07);
+        }
+        .page-head::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--sunset); }
+        .page-head__main { display: flex; align-items: center; gap: 1rem; min-width: 0; }
+        .page-head__icon {
+            width: 52px; height: 52px; flex-shrink: 0; display: grid; place-items: center; border-radius: 50%;
+            font-size: 1.6rem; color: var(--sunset-bright); background: var(--navy-deep);
+            box-shadow: 0 0 0 4px rgba(156, 96, 55, .18);
+        }
+        .page-head h1 { font-family: var(--display-font); font-weight: 700; font-size: 1.6rem; margin: 0; color: var(--navy-deep); }
+        .page-head p { margin: .15rem 0 0; color: var(--ink-soft); font-size: .92rem; }
+        .page-head__actions { display: flex; gap: .6rem; flex-wrap: wrap; }
 
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
-
-    <style>
-
-        @import url("https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap");
-
-
-        :root {
-
-            --navy-deep: #0b1d26;
-            --navy-mid: #142f3d;
-            --navy-soft: #1d3f50;
-
-            --brass: #c9a26a;
-            --brass-bright: #e7c68c;
-
-            --paper: #f6f1e4;
-
-            --ink: #16232b;
-            --ink-soft: #5b6b74;
-
-            --body-font: 'Inter', sans-serif;
-            --display-font: 'Big Shoulders Display', sans-serif;
-            --mono-font: 'Space Mono', monospace;
+        /* Panels */
+        .panel { position: relative; background: #fff; border: 1px solid var(--line); border-radius: .9rem; padding: 1.25rem 1.4rem; box-shadow: 0 6px 18px rgba(45, 56, 43, .07); }
+        .panel--flush { padding: 0; overflow: hidden; }
+        .panel__footer {
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+            padding: .9rem 1.25rem; border-top: 1px dashed rgba(45, 56, 43, .18); color: var(--ink-soft); font-size: .85rem; background: #fff;
         }
 
-
-        body {
-
-            font-family: var(--body-font);
-
-            background-color: var(--paper);
-
-            color: var(--ink);
-
-        }
-
-
-        /* ================= HEADER ================= */
-
-        .ledger-header h2,
-        .ledger-header h5 {
-
-            font-family: var(--display-font);
-
-        }
-
-
-        /* ================= CARD ================= */
-
-        .ledger-card {
-
-            border: 1px solid rgba(22, 35, 43, .08);
-
-            border-radius: .75rem;
-
-            background: #fffdf8;
-
-            box-shadow: 0 4px 14px rgba(11, 29, 38, .06);
-
-        }
-
-
-        /* ================= LABEL ================= */
-
-        .ledger-label {
-
-            font-family: var(--display-font);
-
-            font-weight: 700;
-
-            letter-spacing: .02em;
-
-            text-transform: uppercase;
-
-            font-size: .85rem;
-
-            color: var(--navy-soft);
-
-        }
-
-
-        /* ================= INPUT ================= */
-
-        .ledger-input {
-
-            border: 1px solid rgba(22, 35, 43, .18);
-
-            border-radius: .75rem;
-
-            background: var(--paper);
-
-            color: var(--ink);
-
-        }
-
-
-        .ledger-input:focus {
-
-            border-color: var(--brass);
-
-            box-shadow: 0 0 0 .2rem rgba(201, 162, 106, .2);
-
-        }
-
-
-        /* ================= BUTTON ================= */
-
-        .btn-brass {
-
-            background: var(--brass);
-
-            border: 1px solid var(--brass);
-
-            color: var(--navy-deep);
-
-            font-weight: 700;
-
-            letter-spacing: .01em;
-
-            border-radius: .5rem;
-
-        }
-
-
-        .btn-brass:hover {
-
-            background: var(--brass-bright);
-
-            border-color: var(--brass-bright);
-
-            color: var(--navy-deep);
-
-            transform: translateY(-1px);
-
-            box-shadow: 0 8px 18px rgba(201, 162, 106, .35);
-
-        }
-
-
-        /* ================= OUTLINE BUTTON ================= */
-
-        .btn-outline-ledger {
-
-            background: transparent;
-
-            border: 1px solid var(--navy-soft);
-
-            color: var(--navy-soft);
-
-            font-weight: 600;
-
-            border-radius: .5rem;
-
-        }
-
-
-        .btn-outline-ledger:hover {
-
-            background: var(--navy-soft);
-
-            color: var(--paper);
-
-        }
-
-
-        /* ================= FORM TEXT ================= */
-
-        .form-text {
-
-            color: var(--ink-soft);
-
-        }
-
-
-        /* =====================================================
-           SUMMERNOTE
-        ===================================================== */
-
-        .note-editor.note-frame {
-
-            border: 1px solid rgba(22, 35, 43, .18) !important;
-
-            border-radius: .75rem !important;
-
-            overflow: hidden;
-
-            background: #ffffff;
-
-        }
-
-
-        .note-editor .note-toolbar {
-
-            background: var(--paper);
-
-            border-bottom: 1px solid rgba(22, 35, 43, .12);
-
-        }
-
-
-        .note-editor .note-editable {
-
-            background: #ffffff;
-
-            min-height: 300px;
-
-            color: var(--ink);
-
-            font-family: var(--body-font);
-
-            font-size: 15px;
-
-            line-height: 1.6;
-
-        }
-
-
-        .note-editor .note-statusbar {
-
-            background: var(--paper);
-
-        }
-
-
-        .note-editor .note-btn {
-
-            border-radius: .35rem;
-
-        }
-
-
-        .note-editor .note-btn:hover {
-
-            background: #e9dfca;
-
-        }
-
-
-        .note-placeholder {
-
-            color: #8a969c !important;
-
-        }
-
-
-        /* ================= MOBILE ================= */
-
+        /* Forms */
+        .form-section { display: flex; align-items: center; gap: .7rem; margin: 0 0 1.1rem; }
+        .form-section__icon { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; font-size: 1.15rem; color: var(--navy-soft); background: var(--sky-soft); }
+        .form-section h2 { font-family: var(--display-font); font-size: 1.2rem; font-weight: 700; margin: 0; color: var(--navy-deep); }
+        .form-section__hint { margin-left: auto; font-size: .82rem; color: var(--ink-soft); }
+
+        .field-label { font-weight: 700; font-size: .85rem; color: var(--navy-soft); margin-bottom: .35rem; }
+        .flight .form-field { min-height: 44px; border: 1px solid rgba(45, 56, 43, .22); border-radius: .6rem; background-color: #fff; }
+        .flight textarea.form-field { min-height: 0; }
+        .flight input[type="file"].form-field { padding: .55rem .75rem; }
+        .flight .form-field:focus { border-color: var(--sunset); box-shadow: 0 0 0 .22rem rgba(156, 96, 55, .2); }
+        .flight .form-field.is-invalid { border-color: var(--red); background-image: none; }
+        .form-hint { font-size: .8rem; color: var(--ink-soft); margin-top: .3rem; }
+        .form-hint strong { font-family: var(--mono-font); font-size: .78rem; color: var(--navy-soft); }
+
+        .counter { font-weight: 600; font-size: .78rem; color: var(--ink-soft); font-family: var(--mono-font); }
+        .counter--warning { color: #b0701f; }
+        .counter--danger { color: var(--red); }
+        .invalid-feedback-live { display: block; font-size: .8rem; color: var(--red); margin-top: .25rem; min-height: 1.1rem; }
+
+
+        .form-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+        .form-actions__status { display: flex; align-items: center; gap: .75rem; }
+        .form-actions__status .form-field { width: 190px; }
+
+        
         @media (max-width: 768px) {
-
-            .page-header {
-
-                padding: 20px !important;
-
-            }
-
-            .page-header .d-flex {
-
-                margin-top: 15px;
-
-            }
-
-            .note-editor .note-toolbar {
-
-                flex-wrap: wrap;
-
-            }
-
+            .form-actions__status .form-field { width: 100%; }
         }
-
-    </style>
-
+</style>
 @endsection
 
 
-{{-- =========================================================
-     SUMMERNOTE SCRIPT
-========================================================= --}}
 @section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-    <script>
-
-        $(document).ready(function () {
-
-            $('#description').summernote({
-
+    /* ---------- Content editor (jQuery + Summernote are loaded by the layout) ---------- */
+    try {
+        if (window.jQuery && window.jQuery.fn.summernote) {
+            window.jQuery('#description').summernote({
                 placeholder: 'Write subcategory content here...',
-
                 tabsize: 2,
-
                 height: 300,
-
                 toolbar: [
-
                     ['style', ['style']],
-
-                    ['font', [
-                        'bold',
-                        'italic',
-                        'underline',
-                        'clear'
-                    ]],
-
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
                     ['fontname', ['fontname']],
-
                     ['color', ['color']],
-
-                    ['para', [
-                        'ul',
-                        'ol',
-                        'paragraph'
-                    ]],
-
+                    ['para', ['ul', 'ol', 'paragraph']],
                     ['table', ['table']],
-
-                    ['insert', [
-                        'link',
-                        'picture',
-                        'video'
-                    ]],
-
-                    ['view', [
-                        'fullscreen',
-                        'codeview',
-                        'help'
-                    ]]
-
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
                 ]
-
             });
+        } else {
+            console.error('jQuery or Summernote is not loaded.');
+        }
+    } catch (err) {
+        console.error('Summernote failed to mount:', err);
+    }
 
-        });
+    /* ---------- Meta description counter (limit 160) ---------- */
+    const area    = document.getElementById('meta_description');
+    const counter = document.getElementById('meta-description-count');
 
-    </script>
+    if (area && counter) {
+        const LIMIT = 160;
 
+        function updateCount() {
+            const n = area.value.length;
+            counter.textContent = n + ' / ' + LIMIT;
+            counter.classList.toggle('counter--warning', n >= 150 && n < LIMIT);
+            counter.classList.toggle('counter--danger', n >= LIMIT);
+        }
+
+        area.addEventListener('input', updateCount);
+        updateCount();
+    }
+});
+</script>
 @endsection
